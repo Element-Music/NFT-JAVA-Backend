@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "Consumer")
+@Entity
 @Data
 @Builder
 @Table(name = "Consumer")

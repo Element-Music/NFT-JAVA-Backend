@@ -5,13 +5,19 @@ import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
 import com.Element.Music.Service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class SongServiceImpl implements SongService {
 
-    @Autowired
     private MusicianService musicianService;
+
+    public SongServiceImpl(MusicianService musicianService) {
+        this.musicianService = musicianService;
+    }
 
     @Override
     public Song addSong(Song song) {

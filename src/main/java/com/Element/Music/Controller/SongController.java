@@ -1,7 +1,7 @@
 package com.Element.Music.Controller;
 
 import com.Element.Music.Model.DAO.MusicDAO.Song;
-import com.Element.Music.Service.Impl.SongServiceImpl;
+import com.Element.Music.Service.SongService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.util.unit.DataUnit;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -23,11 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+@RestController
 public class SongController {
     @Autowired
-    private SongServiceImpl songService;
+    private SongService songService;
 
-    @Bean
+    /*@Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //文件最大10M,DataUnit提供5中类型B,KB,MB,GB,TB
@@ -44,7 +42,7 @@ public class SongController {
             registry.addResourceHandler("/img/songPic/**").addResourceLocations("file:/Users/jiangjiayi/Documents/github-workspace/music-website/music-server/img/songPic/");
             registry.addResourceHandler("/song/**").addResourceLocations("file:/Users/jiangjiayi/Documents/github-workspace/music-website/music-server/song/");
         }
-    }
+    }*/
 
     //    添加歌曲
     @ResponseBody

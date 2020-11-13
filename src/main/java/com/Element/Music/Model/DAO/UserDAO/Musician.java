@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Data
 @Builder
-@Entity(name = "Musician")
+@Entity
 @Table(name = "Musician")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,8 +27,7 @@ public class Musician extends User implements Serializable {
     @Column(nullable = false)
     private MusicType musicType;
 
-    @OneToMany(mappedBy = "Song", fetch = FetchType.LAZY)
-    @JoinColumn(name = "songId")
+    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY)
     private Set<Song> songs;
 
     private String weibo;

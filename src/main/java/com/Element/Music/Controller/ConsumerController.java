@@ -6,10 +6,7 @@ import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,17 +19,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class UserController {
+@RestController
+public class ConsumerController {
     @Autowired
     private ConsumerService consumerService;
 
-    @Configuration
+    /*@Configuration
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
             registry.addResourceHandler("/portrait/**").addResourceLocations("file:/Users/jiangjiayi/Documents/github-workspace/music-website/music-server/avatorImages/");
         }
-    }
+    }*/
 
     //    添加用户
     @ResponseBody

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+@Entity(name = "Song")
 @Data
 @Builder
 @Table(name = "Song")

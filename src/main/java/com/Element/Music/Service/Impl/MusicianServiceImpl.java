@@ -5,15 +5,19 @@ import com.Element.Music.Repository.UserRepository.MusicianRepository;
 import com.Element.Music.Service.MusicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class MusicianServiceImpl implements MusicianService {
 
-    @Autowired
     private MusicianRepository musicianRepository;
+
+    public MusicianServiceImpl(MusicianRepository musicianRepository) {
+        this.musicianRepository = musicianRepository;
+    }
 
     @Override
     public Musician addMusician(Musician musician) {

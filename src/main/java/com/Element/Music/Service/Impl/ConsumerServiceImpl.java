@@ -4,11 +4,18 @@ import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ConsumerServiceImpl implements ConsumerService {
 
-    @Autowired
+
     private ConsumerRepository consumerRepository;
+
+    public ConsumerServiceImpl(ConsumerRepository consumerRepository) {
+        this.consumerRepository = consumerRepository;
+    }
 
     @Override
     public Consumer register() {
