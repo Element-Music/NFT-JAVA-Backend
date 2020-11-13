@@ -73,7 +73,7 @@ public class SongController {
         String storeUrlPath = "/song/" + fileName;
         try {
             mpfile.transferTo(dest);
-            Song song = Song.builder().musicianId(Long.parseLong(musicianId)).description(description).name(name)
+            Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).name(name)
                     .createTime(new Date()).updateTime(new Date()).lyric(lyric).representImagePath(pic).build();
             //song.setUrl(storeUrlPath);
             Song res = songService.addSong(song);
@@ -148,7 +148,7 @@ public class SongController {
         String description = req.getParameter("description").trim();
         String lyric = req.getParameter("lyric").trim();
 
-        Song song = Song.builder().musicianId(Long.parseLong(musicianId)).description(description).name(name)
+        Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).name(name)
                 .updateTime(new Date()).lyric(lyric).songId(Long.parseLong(id)).build();
         song.setLyric(lyric);
 

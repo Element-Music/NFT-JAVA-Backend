@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Entity(name = "Consumer")
 @Data
 @Builder
 @Table(name = "Consumer")
@@ -17,7 +17,4 @@ public class Consumer extends User implements Serializable {
 
     private static final long serialVersionUID = -2214230518390003400L;
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
 }

@@ -1,8 +1,11 @@
 package com.Element.Music.Model.DAO.MusicDAO;
 
 import com.Element.Music.Emun.MusicType;
+import com.Element.Music.Model.DAO.UserDAO.Musician;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,12 +13,13 @@ import java.util.Date;
 @Entity
 @Data
 @Builder
-@Table(name = "")
+@Table(name = "Song")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Song {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ManyToOne
     private long songId;
 
     @Column(nullable = false)
@@ -34,12 +38,12 @@ public class Song {
 
     private MusicType musicType;
 
-    private Long musicianId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Musician musician;
 
     private String url;
 
     private String lyric;
 
     private String description;
-
 }

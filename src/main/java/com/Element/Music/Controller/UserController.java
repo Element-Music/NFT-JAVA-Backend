@@ -1,5 +1,6 @@
 package com.Element.Music.Controller;
 
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSONObject;
@@ -60,9 +61,9 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        consumer.setUserName(username);
+        consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(new Byte(sex));
+        consumer.setSex(sex.equals("male") ? Sex.MALE : Sex.FEMALE);
         if (phoneNum == "") {
             consumer.setPhoneNum(null);
         } else {
@@ -165,9 +166,9 @@ public class UserController {
             e.printStackTrace();
         }
         consumer.setId(Integer.parseInt(id));
-        consumer.setUserName(username);
+        consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(new Byte(sex));
+        consumer.setSex(sex.equals("male") ? Sex.MALE : Sex.FEMALE);
         consumer.setPhoneNum(phone_num);
         consumer.setEmail(email);
         consumer.setBirth(myBirth);

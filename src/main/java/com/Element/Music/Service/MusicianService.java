@@ -1,9 +1,11 @@
 package com.Element.Music.Service;
 
 import com.Element.Music.Model.DAO.UserDAO.Musician;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface MusicianService {
     Musician addMusician(Musician musician);
 

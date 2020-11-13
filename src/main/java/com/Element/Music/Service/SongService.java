@@ -1,6 +1,7 @@
 package com.Element.Music.Service;
 
 import com.Element.Music.Model.DAO.MusicDAO.Song;
+import com.Element.Music.Model.DAO.UserDAO.Musician;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface SongService {
     Song updateSongPic(Song song);
 
     boolean updateSongUrl(Song song);
+
+    Musician getMusicianById(long id);
 }

@@ -1,9 +1,14 @@
 package com.Element.Music.Service.Impl;
 
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
+import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ConsumerServiceImpl implements ConsumerService {
+
+    @Autowired
+    private ConsumerRepository consumerRepository;
 
     @Override
     public Consumer register() {
@@ -37,11 +42,16 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public boolean verifyPasswd(String userName, String passWord) {
-        return false;
+        return consumerRepository.findByNameAndPassWord(userName, passWord).get() != null;
     }
 
     @Override
     public Consumer updateConsumer(Consumer consumer) {
         return null;
+    }
+
+    @Override
+    public boolean updateUserPicture(Consumer consumer) {
+        return false;
     }
 }

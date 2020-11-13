@@ -1,5 +1,6 @@
 package com.Element.Music.Controller;
 
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
 import com.alibaba.fastjson.JSONObject;
@@ -48,7 +49,7 @@ public class MusicianController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        musician.setUserName(name);
+        musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
         musician.setSex(sex == "male" ? Sex.MALE : Sex.FEMALE);
@@ -114,7 +115,7 @@ public class MusicianController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        musician.setUserName(name);
+        musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
 
