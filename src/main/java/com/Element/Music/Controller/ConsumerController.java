@@ -21,8 +21,12 @@ import java.util.Date;
 
 @RestController
 public class ConsumerController {
-    @Autowired
-    private ConsumerService consumerService;
+
+    private final ConsumerService consumerService;
+
+    public ConsumerController(ConsumerService consumerService) {
+        this.consumerService = consumerService;
+    }
 
     /*@Configuration
     public class MyPicConfig implements WebMvcConfigurer {

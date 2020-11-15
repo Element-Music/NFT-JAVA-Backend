@@ -17,7 +17,7 @@ import java.util.Set;
 @Data
 @Builder
 @Entity
-@Table(name = "Musician")
+@Table(name = "musician")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Musician extends User implements Serializable {

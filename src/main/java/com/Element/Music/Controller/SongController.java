@@ -22,8 +22,12 @@ import java.util.Date;
 
 @RestController
 public class SongController {
-    @Autowired
-    private SongService songService;
+
+    private final SongService songService;
+
+    public SongController(SongService songService) {
+        this.songService = songService;
+    }
 
     /*@Bean
     public MultipartConfigElement multipartConfigElement() {

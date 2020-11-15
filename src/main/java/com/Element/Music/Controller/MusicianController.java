@@ -18,8 +18,11 @@ import java.util.Date;
 @RestController
 public class MusicianController {
 
-    @Autowired
-    private MusicianService musicianService;
+    private final MusicianService musicianService;
+
+    public MusicianController(MusicianService musicianService) {
+        this.musicianService = musicianService;
+    }
 
    /* @Configuration
     public class MyPicConfig implements WebMvcConfigurer {

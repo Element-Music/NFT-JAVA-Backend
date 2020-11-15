@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class SongServiceImpl implements SongService {
 
-    private MusicianService musicianService;
+    private final MusicianService musicianService;
 
     public SongServiceImpl(MusicianService musicianService) {
         this.musicianService = musicianService;

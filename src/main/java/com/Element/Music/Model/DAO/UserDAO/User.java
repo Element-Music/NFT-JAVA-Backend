@@ -1,25 +1,25 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Emun.Sex;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "user")
 public class User {
 
-    @NonNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue/*(strategy = GenerationType.TABLE)*/
     protected long id;
 
     @NonNull
@@ -41,7 +41,6 @@ public class User {
     protected Date updateTime;
 
     protected Sex sex;
-
 
     protected String phoneNum;
 

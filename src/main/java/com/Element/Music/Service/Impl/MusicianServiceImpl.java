@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class MusicianServiceImpl implements MusicianService {
 
-    private MusicianRepository musicianRepository;
+    private final MusicianRepository musicianRepository;
 
     public MusicianServiceImpl(MusicianRepository musicianRepository) {
         this.musicianRepository = musicianRepository;

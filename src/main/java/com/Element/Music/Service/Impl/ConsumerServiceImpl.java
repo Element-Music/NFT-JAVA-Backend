@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ConsumerServiceImpl implements ConsumerService {
 
 
-    private ConsumerRepository consumerRepository;
+    private final ConsumerRepository consumerRepository;
 
     public ConsumerServiceImpl(ConsumerRepository consumerRepository) {
         this.consumerRepository = consumerRepository;
