@@ -27,7 +27,7 @@ public class Musician extends User implements Serializable {
     @Column(nullable = false)
     private MusicType musicType;
 
-    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Song> songs;
 
     private String weibo;
