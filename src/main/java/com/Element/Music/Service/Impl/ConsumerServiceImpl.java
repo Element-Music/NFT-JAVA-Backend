@@ -44,7 +44,8 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public Consumer addConsumer(Consumer consumer) {
-        return null;
+
+        return consumerRepository.save(consumer);
     }
 
     @Override

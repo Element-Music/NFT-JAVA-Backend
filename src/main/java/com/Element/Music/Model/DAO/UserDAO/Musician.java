@@ -40,4 +40,6 @@ public class Musician extends User implements Serializable {
 
     private String representImagePath;
 
+    private int liked;
+
 }

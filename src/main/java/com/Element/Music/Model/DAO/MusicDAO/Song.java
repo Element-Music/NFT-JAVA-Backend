@@ -46,4 +46,6 @@ public class Song {
     private String lyric;
 
     private String description;
+
+    private int liked;
 }
