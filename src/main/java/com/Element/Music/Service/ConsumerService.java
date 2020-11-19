@@ -2,6 +2,8 @@ package com.Element.Music.Service;
 
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 
+import java.util.List;
+
 public interface ConsumerService {
     Consumer register();
 
@@ -20,4 +22,10 @@ public interface ConsumerService {
     Consumer updateConsumer(Consumer consumer);
 
     boolean updateUserPicture(Consumer consumer);
+
+    Consumer getConsumerByID(long id);
+
+    List<Consumer> getAllUser();
+
+    boolean removeById(long id);
 }

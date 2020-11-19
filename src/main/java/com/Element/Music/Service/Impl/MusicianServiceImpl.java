@@ -52,5 +52,16 @@ public class MusicianServiceImpl implements MusicianService {
         return false;
     }
 
+    @Override
+    public List<Musician> getAllMusician() {
+        return musicianRepository.findAll();
+    }
+
+    @Override
+    public boolean removeById(long id) {
+        musicianRepository.deleteById(id);
+        return musicianRepository.findById(id).get() == null ? true : false;
+    }
+
 
 }

@@ -70,32 +70,26 @@ public class MusicianController {
         }
     }
 
-   /* //    返回所有歌手
+    //    返回所有歌手
     @RequestMapping(value = "/singer", method = RequestMethod.GET)
     public Object allSinger() {
-        return singerService.allSinger();
+        return musicianService.getAllMusician();
     }
 
     //    根据歌手名查找歌手
     @RequestMapping(value = "/singer/name/detail", method = RequestMethod.GET)
     public Object singerOfName(HttpServletRequest req) {
         String name = req.getParameter("name").trim();
-        return singerService.singerOfName(name);
+        return musicianService.getMusicianByName(name);
     }
 
-    //    根据歌手性别查找歌手
-    @RequestMapping(value = "/singer/sex/detail", method = RequestMethod.GET)
-    public Object singerOfSex(HttpServletRequest req) {
-        String sex = req.getParameter("sex").trim();
-        return singerService.singerOfSex(Integer.parseInt(sex));
-    }
 
     //    删除歌手
     @RequestMapping(value = "/singer/delete", method = RequestMethod.GET)
     public Object deleteSinger(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return singerService.deleteSinger(Integer.parseInt(id));
-    }*/
+        return musicianService.removeById(Integer.parseInt(id));
+    }
 
     //    更新歌手信息
     @ResponseBody

@@ -3,6 +3,8 @@ package com.Element.Music.Controller;
 import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -28,13 +30,13 @@ public class ConsumerController {
         this.consumerService = consumerService;
     }
 
-    /*@Configuration
+    @Configuration
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/portrait/**").addResourceLocations("file:/Users/jiangjiayi/Documents/github-workspace/music-website/music-server/avatorImages/");
+            registry.addResourceHandler("/portrait/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/portrait/");
         }
-    }*/
+    }
 
     //    添加用户
     @ResponseBody
@@ -48,7 +50,7 @@ public class ConsumerController {
         String email = req.getParameter("email").trim();
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
-        String picture = req.getParameter("picture").trim();
+        String picture = req.getParameter("portrait").trim();
 
         if (username.equals("") || username == null) {
             jsonObject.put("code", 0);
@@ -79,7 +81,7 @@ public class ConsumerController {
         }
         consumer.setBirth(myBirth);
         consumer.setLocation(location);
-        consumer.setPicture(picture);
+        consumer.setPortrait(picture);
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
 
@@ -103,7 +105,6 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-//        System.out.println(username+"  "+password);
         boolean res = consumerService.verifyPasswd(username, password);
 
         if (res) {
@@ -121,24 +122,24 @@ public class ConsumerController {
     }
 
     //    返回所有用户
-/*    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public Object allUser() {
-        return consumerService.allUser();
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public JSONArray allUser() {
+        return JSONArray.parseArray(JSON.toJSONString(consumerService.getAllUser()));
     }
 
     //    返回指定ID的用户
     @RequestMapping(value = "/user/detail", method = RequestMethod.GET)
-    public Object userOfId(HttpServletRequest req) {
+    public JSONObject userOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return consumerService.userOfId(Integer.parseInt(id));
+        return (JSONObject) JSONObject.toJSON(consumerService.getConsumerByID(Long.parseLong(id)));
     }
 
     //    删除用户
     @RequestMapping(value = "/user/delete", method = RequestMethod.GET)
     public Object deleteUser(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return consumerService.deleteUser(Integer.parseInt(id));
-    }*/
+        return consumerService.removeById(Integer.parseInt(id));
+    }
 
     //    更新用户信息
     @ResponseBody
@@ -149,10 +150,11 @@ public class ConsumerController {
         String username = req.getParameter("username").trim();
         String password = req.getParameter("password").trim();
         String sex = req.getParameter("sex").trim();
-        String phone_num = req.getParameter("phoneNum").trim();
+        String phoneNum = req.getParameter("phoneNum").trim();
         String email = req.getParameter("email").trim();
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
+        String portrait = req.getParameter("portrait").trim();
 
         if (username.equals("") || username == null) {
             jsonObject.put("code", 0);
@@ -171,11 +173,11 @@ public class ConsumerController {
         consumer.setName(username);
         consumer.setPassWord(password);
         consumer.setSex(sex.equals("male") ? Sex.MALE : Sex.FEMALE);
-        consumer.setPhoneNum(phone_num);
+        consumer.setPhoneNum(phoneNum);
         consumer.setEmail(email);
         consumer.setBirth(myBirth);
         consumer.setLocation(location);
-//        consumer.setAvator(avator);
+        consumer.setPortrait(portrait);
         consumer.setUpdateTime(new Date());
 
         Consumer res = consumerService.updateConsumer(consumer);
@@ -209,16 +211,16 @@ public class ConsumerController {
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storePicturePath = "/avatorImages/" + fileName;
+        String portraitPath = "/portraitImages/" + fileName;
         try {
             pictureFile.transferTo(dest);
             Consumer consumer = new Consumer();
             consumer.setId(id);
-            consumer.setPicture(storePicturePath);
+            consumer.setPortrait(portraitPath);
             boolean res = consumerService.updateUserPicture(consumer);
             if (res) {
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", storePicturePath);
+                jsonObject.put("avator", portraitPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             } else {

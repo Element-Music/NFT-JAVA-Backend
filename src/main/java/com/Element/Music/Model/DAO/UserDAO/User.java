@@ -34,7 +34,7 @@ public class User {
     @NonNull
     protected String passWord;
 
-    protected String picture;
+    protected String portrait;
 
     protected Date createTime;
 

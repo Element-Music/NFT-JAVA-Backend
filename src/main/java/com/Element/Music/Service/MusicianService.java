@@ -17,4 +17,8 @@ public interface MusicianService {
     Musician updateMusicianMsg(Musician musician);
 
     boolean updateSingerPic(Musician musician);
+
+    List<Musician> getAllMusician();
+
+    boolean removeById(long id);
 }

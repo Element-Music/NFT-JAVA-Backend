@@ -20,7 +20,7 @@ public class Consumer extends User implements Serializable {
 
     private static final long serialVersionUID = -2214230518390003400L;
 
-    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)//TODO，了解各种cascade的作用
+    @ManyToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Set<Song> collections;
 
 }

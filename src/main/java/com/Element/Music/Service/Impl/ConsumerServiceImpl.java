@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ConsumerServiceImpl implements ConsumerService {
 
@@ -62,4 +64,22 @@ public class ConsumerServiceImpl implements ConsumerService {
     public boolean updateUserPicture(Consumer consumer) {
         return false;
     }
+
+    @Override
+    public Consumer getConsumerByID(long id) {
+        return consumerRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Consumer> getAllUser() {
+        return consumerRepository.findAll();
+    }
+
+    @Override
+    public boolean removeById(long id) {
+        consumerRepository.deleteById(id);
+        return consumerRepository.findById(id).get() == null ? true : false;
+    }
+
+
 }
