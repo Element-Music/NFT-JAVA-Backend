@@ -35,8 +35,7 @@ class BackendApplicationTests {
         musician.setLocation("China");
         musician.setSex(Sex.FEMALE);
         musician.setPhoneNum("13151081251");
-        musician.setPicture("imagePath");
-        musician.setPassWord("000000");
+        musician.setPortrait("imagePath");
         musicianService.addMusician(musician);
     }
 

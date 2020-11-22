@@ -1,6 +1,7 @@
 package com.Element.Music.Model.DAO.MusicDAO;
 
 import com.Element.Music.Emun.MusicType;
+import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity(name = "Song")
 @Data
@@ -48,4 +50,7 @@ public class Song {
     private String description;
 
     private int liked;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "collections")
+    private Set<Consumer> consumers;
 }

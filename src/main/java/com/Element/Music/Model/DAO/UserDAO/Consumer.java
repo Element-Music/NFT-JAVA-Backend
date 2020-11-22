@@ -1,10 +1,7 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Model.DAO.MusicDAO.Song;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +17,10 @@ public class Consumer extends User implements Serializable {
 
     private static final long serialVersionUID = -2214230518390003400L;
 
-    @ManyToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Set<Song> collections;
+
+    @NonNull
+    protected String passWord;
 
 }

@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
+@RequestMapping("/consumer")
 public class ConsumerController {
 
     private final ConsumerService consumerService;
@@ -40,7 +41,7 @@ public class ConsumerController {
 
     //    添加用户
     @ResponseBody
-    @RequestMapping(value = "/user/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Object addUser(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
@@ -50,7 +51,7 @@ public class ConsumerController {
         String email = req.getParameter("email").trim();
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
-        String picture = req.getParameter("portrait").trim();
+        String portrait = req.getParameter("portrait").trim();
 
         if (username.equals("") || username == null) {
             jsonObject.put("code", 0);
@@ -81,7 +82,7 @@ public class ConsumerController {
         }
         consumer.setBirth(myBirth);
         consumer.setLocation(location);
-        consumer.setPortrait(picture);
+        consumer.setPortrait(portrait);
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
 
@@ -99,7 +100,7 @@ public class ConsumerController {
 
     //    判断是否登录成功
     @ResponseBody
-    @RequestMapping(value = "/user/login/status", method = RequestMethod.POST)
+    @RequestMapping(value = "/login/status", method = RequestMethod.POST)
     public Object loginStatus(HttpServletRequest req, HttpSession session) {
 
         JSONObject jsonObject = new JSONObject();
@@ -122,20 +123,20 @@ public class ConsumerController {
     }
 
     //    返回所有用户
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/allConsumer", method = RequestMethod.GET)
     public JSONArray allUser() {
         return JSONArray.parseArray(JSON.toJSONString(consumerService.getAllUser()));
     }
 
     //    返回指定ID的用户
-    @RequestMapping(value = "/user/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public JSONObject userOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
         return (JSONObject) JSONObject.toJSON(consumerService.getConsumerByID(Long.parseLong(id)));
     }
 
     //    删除用户
-    @RequestMapping(value = "/user/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public Object deleteUser(HttpServletRequest req) {
         String id = req.getParameter("id");
         return consumerService.removeById(Integer.parseInt(id));
@@ -143,7 +144,7 @@ public class ConsumerController {
 
     //    更新用户信息
     @ResponseBody
-    @RequestMapping(value = "/user/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Object updateUserMsg(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
@@ -194,7 +195,7 @@ public class ConsumerController {
 
     //    更新用户头像
     @ResponseBody
-    @RequestMapping(value = "/user/portrait/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/portrait/update", method = RequestMethod.POST)
     public Object updateUserPic(@RequestParam("file") MultipartFile pictureFile, @RequestParam("id") int id) {
         JSONObject jsonObject = new JSONObject();
 

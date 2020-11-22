@@ -4,9 +4,11 @@ import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -16,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
+@RequestMapping("/musician")
 public class MusicianController {
 
     private final MusicianService musicianService;
@@ -24,17 +27,17 @@ public class MusicianController {
         this.musicianService = musicianService;
     }
 
-   /* @Configuration
+    @Configuration
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/img/singerPic/**").addResourceLocations("file:/Users/jiangjiayi/Documents/github-workspace/music-website/music-server/img/singerPic/");
+            registry.addResourceHandler("/img/musicianPortrait/**").addResourceLocations("file:/Users/jiangjiay/Element/server/img/musicianPortrait/");
         }
-    }*/
+    }
 
     //    添加歌手
     @ResponseBody
-    @RequestMapping(value = "/singer/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/musician/add", method = RequestMethod.POST)
     public Object addSinger(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String name = req.getParameter("name").trim();
@@ -43,6 +46,7 @@ public class MusicianController {
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
         String description = req.getParameter("description").trim();
+        String portrait = req.getParameter("musicianPortrait").trim();
 
         Musician musician = Musician.builder().representImagePath(pic).description(description).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,7 +60,7 @@ public class MusicianController {
         musician.setBirth(myBirth);
         musician.setLocation(location);
         musician.setSex(sex == "male" ? Sex.MALE : Sex.FEMALE);
-
+        musician.setPortrait(portrait);
         Musician res = musicianService.addMusician(musician);
 
         if (res != null) {
@@ -71,13 +75,13 @@ public class MusicianController {
     }
 
     //    返回所有歌手
-    @RequestMapping(value = "/singer", method = RequestMethod.GET)
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Object allSinger() {
         return musicianService.getAllMusician();
     }
 
     //    根据歌手名查找歌手
-    @RequestMapping(value = "/singer/name/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/name/detail", method = RequestMethod.GET)
     public Object singerOfName(HttpServletRequest req) {
         String name = req.getParameter("name").trim();
         return musicianService.getMusicianByName(name);
@@ -85,7 +89,7 @@ public class MusicianController {
 
 
     //    删除歌手
-    @RequestMapping(value = "/singer/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public Object deleteSinger(HttpServletRequest req) {
         String id = req.getParameter("id");
         return musicianService.removeById(Integer.parseInt(id));
@@ -93,7 +97,7 @@ public class MusicianController {
 
     //    更新歌手信息
     @ResponseBody
-    @RequestMapping(value = "/singer/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Object updateSingerMsg(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
@@ -115,6 +119,8 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
+        musician.setSex(sex == "male" ? Sex.MALE : Sex.FEMALE);
+        musician.setId(Long.parseLong(id));
 
         Musician res = musicianService.updateMusicianMsg(musician);
         if (res != null) {
@@ -130,7 +136,7 @@ public class MusicianController {
 
     //    更新歌手头像
     @ResponseBody
-    @RequestMapping(value = "/singer/avatar/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/avatar/update", method = RequestMethod.POST)
     public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id) {
         JSONObject jsonObject = new JSONObject();
 

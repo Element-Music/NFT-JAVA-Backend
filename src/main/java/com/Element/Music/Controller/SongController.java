@@ -3,7 +3,6 @@ package com.Element.Music.Controller;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.SongService;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @RestController
+@RequestMapping("/song")
 public class SongController {
 
     private final SongService songService;
@@ -50,7 +50,7 @@ public class SongController {
 
     //    添加歌曲
     @ResponseBody
-    @RequestMapping(value = "/song/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Object addSong(HttpServletRequest req, @RequestParam("file") MultipartFile mpfile) {
         JSONObject jsonObject = new JSONObject();
         String musicianId = req.getParameter("musicianId").trim();
@@ -99,41 +99,41 @@ public class SongController {
     }
 
     //    返回所有歌曲
-/*    @RequestMapping(value = "/song", method = RequestMethod.GET)
+/*    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Object allSong(){
         return songService.allSong();
     }
 
     //    返回指定歌曲ID的歌曲
-    @RequestMapping(value = "/song/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public Object songOfId(HttpServletRequest req){
         String id = req.getParameter("id");
         return songService.songOfId(Integer.parseInt(id));
     }
 
     //    返回指定歌手ID的歌曲
-    @RequestMapping(value = "/song/singer/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/singer/detail", method = RequestMethod.GET)
     public Object songOfSingerId(HttpServletRequest req){
         String singerId = req.getParameter("singerId");
         return songService.songOfSingerId(Integer.parseInt(singerId));
     }
 
     //    返回指定歌手名的歌曲
-    @RequestMapping(value = "/song/singerName/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/singerName/detail", method = RequestMethod.GET)
     public Object songOfSingerName(HttpServletRequest req){
         String name = req.getParameter("name");
         return songService.songOfSingerName('%'+ name + '%');
     }
 
     //    返回指定歌曲名的歌曲
-    @RequestMapping(value = "/song/name/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/name/detail", method = RequestMethod.GET)
     public Object songOfName(HttpServletRequest req){
         String name = req.getParameter("name").trim();
         return songService.songOfName(name);
     }
 
     //    删除歌曲
-    @RequestMapping(value = "/song/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public Object deleteSong(HttpServletRequest req){
         String id = req.getParameter("id");
         return songService.deleteSong(Integer.parseInt(id));
@@ -141,7 +141,7 @@ public class SongController {
 
     //    更新歌曲信息
     @ResponseBody
-    @RequestMapping(value = "/song/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Object updateSongMsg(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
@@ -168,7 +168,7 @@ public class SongController {
 
     //    更新歌曲图片
     @ResponseBody
-    @RequestMapping(value = "/song/img/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/img/update", method = RequestMethod.POST)
     public Object updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") int id) {
         JSONObject jsonObject = new JSONObject();
 
@@ -212,7 +212,7 @@ public class SongController {
     //    更新歌曲URL
     @Deprecated
     @ResponseBody
-    @RequestMapping(value = "/song/url/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/url/update", method = RequestMethod.POST)
     public Object updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") int id) {
         JSONObject jsonObject = new JSONObject();
 

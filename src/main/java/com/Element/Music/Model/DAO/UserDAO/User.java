@@ -19,7 +19,7 @@ import java.util.Date;
 public class User {
 
     @Id
-    @GeneratedValue/*(strategy = GenerationType.TABLE)*/
+    @GeneratedValue
     protected long id;
 
     @NonNull
@@ -30,9 +30,6 @@ public class User {
 
     @NonNull
     protected String location;
-
-    @NonNull
-    protected String passWord;
 
     protected String portrait;
 
