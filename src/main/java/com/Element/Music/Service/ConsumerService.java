@@ -5,9 +5,6 @@ import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import java.util.List;
 
 public interface ConsumerService {
-    Consumer register();
-
-    Consumer login();
 
     Consumer logout();
 
@@ -17,7 +14,9 @@ public interface ConsumerService {
 
     Consumer addConsumer(Consumer consumer);
 
-    boolean verifyPasswd(String userName, String passWord);
+    boolean verifyPasswdByUserName(String userName, String passWord);
+
+    boolean verifyPasswdByPhoneNum(String phoneNum, String passWord);
 
     Consumer updateConsumer(Consumer consumer);
 

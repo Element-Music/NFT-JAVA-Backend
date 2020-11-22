@@ -3,6 +3,7 @@ package com.Element.Music.Service.Impl;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
+import com.Element.Music.Util.PaternUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -17,16 +18,6 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     public ConsumerServiceImpl(ConsumerRepository consumerRepository) {
         this.consumerRepository = consumerRepository;
-    }
-
-    @Override
-    public Consumer register() {
-        return null;
-    }
-
-    @Override
-    public Consumer login() {
-        return null;
     }
 
     @Override
@@ -46,18 +37,23 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public Consumer addConsumer(Consumer consumer) {
-
-        return consumerRepository.save(consumer);
+        return PaternUtil.isUserName(consumer.getName()) && PaternUtil.isMobile(consumer.getPhoneNum())
+                ? consumerRepository.save(consumer) : null;
     }
 
     @Override
-    public boolean verifyPasswd(String userName, String passWord) {
-        return consumerRepository.findByNameAndPassWord(userName, passWord).get() != null;
+    public boolean verifyPasswdByUserName(String userName, String passWord) {
+        return PaternUtil.isUserName(userName) && consumerRepository.findByNameAndPassWord(userName, passWord).get() != null;
+    }
+
+    @Override
+    public boolean verifyPasswdByPhoneNum(String phoneNum, String passWord) {
+        return PaternUtil.isMobile(phoneNum) && consumerRepository.findByPhoneNumAndPassWord(phoneNum, passWord).get() != null;
     }
 
     @Override
     public Consumer updateConsumer(Consumer consumer) {
-        return null;
+        return consumerRepository.save(consumer);
     }
 
     @Override

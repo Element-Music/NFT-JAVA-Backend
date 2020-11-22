@@ -100,13 +100,13 @@ public class ConsumerController {
 
     //    判断是否登录成功
     @ResponseBody
-    @RequestMapping(value = "/login/status", method = RequestMethod.POST)
-    public Object loginStatus(HttpServletRequest req, HttpSession session) {
+    @RequestMapping(value = "/login/username", method = RequestMethod.POST)
+    public Object userNameLogin(HttpServletRequest req, HttpSession session) {
 
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswd(username, password);
+        boolean res = consumerService.verifyPasswdByPhoneNum(username, password);
 
         if (res) {
             jsonObject.put("code", 1);
@@ -119,7 +119,27 @@ public class ConsumerController {
             jsonObject.put("msg", "用户名或密码错误");
             return jsonObject;
         }
+    }
 
+    @ResponseBody
+    @RequestMapping(value = "/login/phoneNum",method = RequestMethod.POST)
+    public Object phoneNumLogin(HttpServletRequest req, HttpSession session){
+        JSONObject jsonObject = new JSONObject();
+        String phoneNum = req.getParameter("phoneNum");
+        String password = req.getParameter("password");
+        boolean res = consumerService.verifyPasswdByUserName(phoneNum, password);
+
+        if (res) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "登录成功");
+            //jsonObject.put("userMsg", consumerService.loginStatus(username));
+            session.setAttribute("phoneNum", phoneNum);
+            return jsonObject;
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "用户名或密码错误");
+            return jsonObject;
+        }
     }
 
     //    返回所有用户
@@ -205,14 +225,14 @@ public class ConsumerController {
             return jsonObject;
         }
         String fileName = System.currentTimeMillis() + pictureFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "avatorImages";
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "portrait";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String portraitPath = "/portraitImages/" + fileName;
+        String portraitPath = "/portrait/" + fileName;
         try {
             pictureFile.transferTo(dest);
             Consumer consumer = new Consumer();
@@ -221,7 +241,7 @@ public class ConsumerController {
             boolean res = consumerService.updateUserPicture(consumer);
             if (res) {
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", portraitPath);
+                jsonObject.put("portrait", portraitPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             } else {
