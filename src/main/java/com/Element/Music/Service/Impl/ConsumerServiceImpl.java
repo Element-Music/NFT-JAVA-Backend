@@ -1,13 +1,17 @@
 package com.Element.Music.Service.Impl;
 
+import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Util.PaternUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Service
@@ -36,9 +40,20 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    public Consumer addConsumer(Consumer consumer) {
-        return PaternUtil.isUserName(consumer.getName()) && PaternUtil.isMobile(consumer.getPhoneNum())
-                ? consumerRepository.save(consumer) : null;
+    public Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        if (consumer.getPassWord() == null || PaternUtil.isUserName(consumer.getName()) || PaternUtil.isMobile(consumer.getPhoneNum())) {
+            if (consumer.getPassWord() == null) {
+                throw new ConsumerException("absence of password");
+            } else if (PaternUtil.isMobile(consumer.getPhoneNum())) {
+                throw new ConsumerException("phoneNumber is illegal");
+            } else {
+                throw new ConsumerException("userName is illegal");
+            }
+        }
+        String pwd = consumer.getPassWord();
+        MessageDigest MD5 = MessageDigest.getInstance("MD5");
+        consumer.setPassWord(String.valueOf(MD5.digest(pwd.getBytes("utf-8"))));
+        return consumerRepository.save(consumer);
     }
 
     @Override

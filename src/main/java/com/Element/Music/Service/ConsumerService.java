@@ -1,7 +1,10 @@
 package com.Element.Music.Service;
 
+import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface ConsumerService {
@@ -12,7 +15,7 @@ public interface ConsumerService {
 
     Consumer update(Consumer consumer);
 
-    Consumer addConsumer(Consumer consumer);
+    Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
     boolean verifyPasswdByUserName(String userName, String passWord);
 
