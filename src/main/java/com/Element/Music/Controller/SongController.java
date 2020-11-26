@@ -2,6 +2,7 @@ package com.Element.Music.Controller;
 
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.SongService;
+import com.Element.Music.Util.FileUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -9,12 +10,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.util.unit.DataUnit;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -32,10 +37,10 @@ public class SongController {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        //文件最大10M,DataUnit提供5中类型B,KB,MB,GB,TB
+        //文件最大15M,DataUnit提供5中类型B,KB,MB,GB,TB
         factory.setMaxFileSize(DataSize.of(15, DataUnit.MEGABYTES));
-        /// 设置总上传数据总大小10M
-        factory.setMaxRequestSize(DataSize.of(10, DataUnit.MEGABYTES));
+        /// 设置总上传数据总大小15M
+        factory.setMaxRequestSize(DataSize.of(15, DataUnit.MEGABYTES));
         return factory.createMultipartConfig();
     }
 
@@ -237,7 +242,7 @@ public class SongController {
             boolean res = songService.updateSongUrl(song);
             if (res) {
                 jsonObject.put("code", 1);
-                jsonObject.put("avator", storeUrlPath);
+                jsonObject.put("urlPath", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             } else {
@@ -252,5 +257,16 @@ public class SongController {
         } finally {
             return jsonObject;
         }
+    }
+
+    @RequestMapping(value = "/download")
+    public void download(@RequestParam("fileName") String filename) throws IOException {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletResponse response = requestAttributes.getResponse();
+        String type = new MimetypesFileTypeMap().getContentType(filename);
+        response.setHeader("Content-type", type);
+        String header = new String(filename.getBytes("utf-8"), "iso-8859-1");
+        response.setHeader("Content-Disposition", "attachment;filename=" + header);
+        FileUtils.download(filename, response);
     }
 }

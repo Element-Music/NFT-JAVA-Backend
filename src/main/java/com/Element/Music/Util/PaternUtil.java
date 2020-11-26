@@ -19,4 +19,11 @@ public class PaternUtil {
         Matcher m = p.matcher ( UserName );
         return m.matches ();
     }
+    //邮箱正则
+    public static boolean isEmail(String UserName) {
+        String regex = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+        Pattern p = Pattern.compile ( regex, Pattern.CASE_INSENSITIVE );
+        Matcher m = p.matcher ( UserName );
+        return m.matches ();
+    }
 }

@@ -72,8 +72,17 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    public boolean updateUserPicture(Consumer consumer) {
-        return false;
+    public boolean updateUserPicture(Consumer consumer) throws ConsumerException {
+        if (consumer.getId() == null || consumer.getPortrait() == null) {
+            if (consumer.getId() == null)
+                throw new ConsumerException("更新头像缺失ID");
+            if (consumer.getPortrait() == null)
+                throw new ConsumerException("更新头像缺失路径");
+        }
+        Consumer consumer1 = consumerRepository.findById(consumer.getId()).get();
+        consumer1.setPortrait(consumer.getPortrait());
+        consumerRepository.save(consumer1);
+        return true;
     }
 
     @Override

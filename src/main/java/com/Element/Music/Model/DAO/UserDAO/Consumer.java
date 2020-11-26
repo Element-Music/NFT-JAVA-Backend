@@ -21,6 +21,6 @@ public class Consumer extends User implements Serializable {
     private Set<Song> collections;
 
     @NonNull
-    protected String passWord;
+    private String passWord;
 
 }

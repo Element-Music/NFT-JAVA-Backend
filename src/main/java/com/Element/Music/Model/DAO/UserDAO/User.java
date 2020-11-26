@@ -20,7 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue
-    protected long id;
+    protected Long id;
 
     @NonNull
     protected String name;

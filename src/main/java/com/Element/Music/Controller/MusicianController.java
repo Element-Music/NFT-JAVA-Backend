@@ -137,7 +137,7 @@ public class MusicianController {
     //    更新歌手头像
     @ResponseBody
     @RequestMapping(value = "/avatar/update", method = RequestMethod.POST)
-    public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id) {
+    public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") long id) {
         JSONObject jsonObject = new JSONObject();
 
         if (avatorFile.isEmpty()) {

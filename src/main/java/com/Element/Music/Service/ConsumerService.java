@@ -23,7 +23,7 @@ public interface ConsumerService {
 
     Consumer updateConsumer(Consumer consumer);
 
-    boolean updateUserPicture(Consumer consumer);
+    boolean updateUserPicture(Consumer consumer) throws ConsumerException;
 
     Consumer getConsumerByID(long id);
 
