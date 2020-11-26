@@ -41,10 +41,10 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (consumer.getPassWord() == null || PaternUtil.isUserName(consumer.getName()) || PaternUtil.isMobile(consumer.getPhoneNum())) {
+        if (consumer.getPassWord() == null || !PaternUtil.isUserName(consumer.getName()) || !PaternUtil.isMobile(consumer.getPhoneNum())) {
             if (consumer.getPassWord() == null) {
                 throw new ConsumerException("absence of password");
-            } else if (PaternUtil.isMobile(consumer.getPhoneNum())) {
+            } else if (!PaternUtil.isMobile(consumer.getPhoneNum())) {
                 throw new ConsumerException("phoneNumber is illegal");
             } else {
                 throw new ConsumerException("userName is illegal");

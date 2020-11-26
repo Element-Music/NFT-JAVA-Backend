@@ -1,6 +1,7 @@
 package com.Element.Music.Controller;
 
 import com.Element.Music.Emun.Sex;
+import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSON;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -86,7 +89,16 @@ public class ConsumerController {
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
 
-        Consumer res = consumerService.addConsumer(consumer);
+        Consumer res = null;
+        try {
+            res = consumerService.addConsumer(consumer);
+        } catch (ConsumerException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         if (res != null) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "注册成功");

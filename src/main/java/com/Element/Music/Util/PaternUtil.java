@@ -14,7 +14,7 @@ public class PaternUtil {
     }
     // 用户名正则: 大写字母+小写字母+数字+下划线
     public static boolean isUserName(String UserName) {
-        String regex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[_]).{8,}$";
+        String regex = "^([\\u4e00-\\u9fa5]{2,4})|([A-Za-z0-9_]{4,16})|([a-zA-Z0-9_\\u4e00-\\u9fa5]{3,16})$";
         Pattern p = Pattern.compile ( regex, Pattern.CASE_INSENSITIVE );
         Matcher m = p.matcher ( UserName );
         return m.matches ();
