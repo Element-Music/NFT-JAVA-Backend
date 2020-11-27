@@ -1,6 +1,7 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Emun.Sex;
+import com.Element.Music.Model.DAO.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,14 +14,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Table(name = "user")
-public class User {
-
-    @Id
-    @GeneratedValue
-    protected Long id;
+@MappedSuperclass
+public class User extends BaseEntity {
 
     @NonNull
     protected String name;
@@ -33,13 +29,11 @@ public class User {
 
     protected String portrait;
 
-    protected Date createTime;
-
-    protected Date updateTime;
-
-    protected Sex sex;
+    protected boolean sex;
 
     protected String phoneNum;
 
     protected String email;
+
+    protected boolean deleted;
 }

@@ -30,8 +30,8 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    public Consumer delete(long ConsumerId) {
-        return null;
+    public void delete(long consumerId) {
+        consumerRepository.deleteById(consumerId);
     }
 
     @Override
@@ -57,6 +57,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
+    @Deprecated
     public boolean verifyPasswdByUserName(String userName, String passWord) {
         return PaternUtil.isUserName(userName) && consumerRepository.findByNameAndPassWord(userName, passWord).get() != null;
     }
@@ -64,6 +65,11 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public boolean verifyPasswdByPhoneNum(String phoneNum, String passWord) {
         return PaternUtil.isMobile(phoneNum) && consumerRepository.findByPhoneNumAndPassWord(phoneNum, passWord).get() != null;
+    }
+
+    @Override
+    public boolean verifyPasswdByEmail(String Email, String passWord) {
+        return PaternUtil.isUserName(Email) && consumerRepository.findByNameAndPassWord(Email, passWord).get() != null;
     }
 
     @Override

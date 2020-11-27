@@ -21,8 +21,7 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Override
     public Musician addMusician(Musician musician) {
-        musicianRepository.save(musician);
-        return null;
+        return musicianRepository.save(musician);
     }
 
     @Override

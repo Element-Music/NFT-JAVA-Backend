@@ -42,7 +42,7 @@ public class ConsumerController {
     //    添加用户
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Object addUser(HttpServletRequest req, @RequestParam("file") MultipartFile pictureFile) {
+    public Object addUser(HttpServletRequest req, @RequestParam("file") MultipartFile pictureFile) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
         String password = req.getParameter("password").trim();
@@ -68,7 +68,7 @@ public class ConsumerController {
         }
         consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(sex.equals("male") ? Sex.MALE : Sex.FEMALE);
+        consumer.setSex(sex.equals("male") ? true : false);//sex为boolean类型，true代表男性，false代表女性
         if (phoneNum == "") {
             consumer.setPhoneNum(null);
         } else {
@@ -87,15 +87,8 @@ public class ConsumerController {
         consumer.setUpdateTime(new Date());
 
         Consumer res = null;
-        try {
-            res = consumerService.addConsumer(consumer);
-        } catch (ConsumerException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        res = consumerService.addConsumer(consumer);
+
         if (res != null) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "注册成功");
@@ -138,6 +131,26 @@ public class ConsumerController {
         String password = req.getParameter("password");
         boolean res = consumerService.verifyPasswdByUserName(phoneNum, password);
 
+        if (res) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "登录成功");
+            //jsonObject.put("userMsg", consumerService.loginStatus(username));
+            session.setAttribute("phoneNum", phoneNum);
+            return jsonObject;
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "用户名或密码错误");
+            return jsonObject;
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/login/email", method = RequestMethod.POST)
+    public Object EmailLogin(HttpServletRequest req, HttpSession session) {
+        JSONObject jsonObject = new JSONObject();
+        String phoneNum = req.getParameter("phoneNum");
+        String password = req.getParameter("password");
+        boolean res = consumerService.verifyPasswdByEmail(phoneNum, password);
         if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "登录成功");
@@ -202,7 +215,7 @@ public class ConsumerController {
         consumer.setId(Long.parseLong(id));
         consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(sex.equals("male") ? Sex.MALE : Sex.FEMALE);
+        consumer.setSex(sex.equals("male") ? true : false);
         consumer.setPhoneNum(phoneNum);
         consumer.setEmail(email);
         consumer.setBirth(myBirth);

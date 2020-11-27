@@ -11,14 +11,17 @@ public interface ConsumerService {
 
     Consumer logout();
 
-    Consumer delete(long ConsumerId);
+    void delete(long ConsumerId);
 
     Consumer update(Consumer consumer);
+
+    boolean verifyPasswdByEmail(String Email, String passWord);
 
     Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
     boolean verifyPasswdByUserName(String userName, String passWord);
 
+    @Deprecated
     boolean verifyPasswdByPhoneNum(String phoneNum, String passWord);
 
     Consumer updateConsumer(Consumer consumer);

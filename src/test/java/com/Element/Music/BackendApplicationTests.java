@@ -22,8 +22,8 @@ class BackendApplicationTests {
 
     @Test
     void contextLoads() {
-        Song song = Song.builder().audioPath("audioPath").createTime(new Date(System.currentTimeMillis())).description("description")
-                .musicType(MusicType.JAZZ).lyric("lyric").name("song").representImagePath("imagePath").updateTime(new Date(System.currentTimeMillis()))
+        Song song = Song.builder().audioPath("audioPath").description("description")
+                .musicType(MusicType.JAZZ).lyric("lyric").name("song").representImagePath("imagePath")
                 .url("http://...com").build();
         Set<Song> songs = new HashSet<>();
         songs.add(song);
@@ -33,7 +33,7 @@ class BackendApplicationTests {
         musician.setBirth(new Date(1995, 10, 29));
         musician.setEmail("740612415@qq.com");
         musician.setLocation("China");
-        musician.setSex(Sex.FEMALE);
+        musician.setSex(false);
         musician.setPhoneNum("13151081251");
         musician.setPortrait("imagePath");
         musicianService.addMusician(musician);

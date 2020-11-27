@@ -1,6 +1,7 @@
 package com.Element.Music.Model.DAO.MusicDAO;
 
 import com.Element.Music.Emun.MusicType;
+import com.Element.Music.Model.DAO.BaseEntity;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import lombok.AllArgsConstructor;
@@ -18,20 +19,10 @@ import java.util.Set;
 @Table(name = "Song")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Song {
-    @Id
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long songId;
+public class Song extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    private Date updateTime;
-
-    @Column(nullable = false)
-    private Date createTime;
 
     @Column(nullable = false)
     private String audioPath;

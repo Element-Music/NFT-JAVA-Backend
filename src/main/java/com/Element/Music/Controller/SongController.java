@@ -81,7 +81,7 @@ public class SongController {
         try {
             mpfile.transferTo(dest);
             Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).name(name)
-                    .createTime(new Date()).updateTime(new Date()).lyric(lyric).representImagePath(pic).build();
+                    .lyric(lyric).representImagePath(pic).build();
             //song.setUrl(storeUrlPath);
             Song res = songService.addSong(song);
             if (res != null) {
@@ -156,7 +156,8 @@ public class SongController {
         String lyric = req.getParameter("lyric").trim();
 
         Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).name(name)
-                .updateTime(new Date()).lyric(lyric).songId(Long.parseLong(id)).build();
+                .lyric(lyric).build();
+        song.setId(Long.parseLong(id));
         song.setLyric(lyric);
 
         Song res = songService.updateSong(song);
@@ -174,7 +175,7 @@ public class SongController {
     //    更新歌曲图片
     @ResponseBody
     @RequestMapping(value = "/img/update", method = RequestMethod.POST)
-    public Object updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") int id) {
+    public Object updateSongPic(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") long id) {
         JSONObject jsonObject = new JSONObject();
 
         if (urlFile.isEmpty()) {
@@ -193,7 +194,8 @@ public class SongController {
         String storeImagePath = "/img/songPic/" + fileName;
         try {
             urlFile.transferTo(dest);
-            Song song = Song.builder().representImagePath(storeImagePath).songId(id).build();
+            Song song = Song.builder().representImagePath(storeImagePath).build();
+            song.setId(id);
             Song res = songService.updateSongPic(song);
             if (res != null) {
                 jsonObject.put("code", 1);
@@ -218,7 +220,7 @@ public class SongController {
     @Deprecated
     @ResponseBody
     @RequestMapping(value = "/url/update", method = RequestMethod.POST)
-    public Object updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") int id) {
+    public Object updateSongUrl(@RequestParam("file") MultipartFile urlFile, @RequestParam("id") long id) {
         JSONObject jsonObject = new JSONObject();
 
         if (urlFile.isEmpty()) {
@@ -237,7 +239,8 @@ public class SongController {
         String storeUrlPath = "/song/" + fileName;
         try {
             urlFile.transferTo(dest);
-            Song song = Song.builder().songId(id).build();
+            Song song = new Song();
+            song.setId(id);
             song.setUrl(storeUrlPath);
             boolean res = songService.updateSongUrl(song);
             if (res) {

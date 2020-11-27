@@ -1,5 +1,6 @@
 package com.Element.Music.Controller;
 
+import com.Element.Music.Emun.MusicType;
 import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
@@ -37,7 +38,7 @@ public class MusicianController {
 
     //    添加歌手
     @ResponseBody
-    @RequestMapping(value = "/musician/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Object addSinger(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String name = req.getParameter("name").trim();
@@ -47,8 +48,10 @@ public class MusicianController {
         String location = req.getParameter("location").trim();
         String description = req.getParameter("description").trim();
         String portrait = req.getParameter("musicianPortrait").trim();
+        String musicType = req.getParameter("musicType").trim();
 
-        Musician musician = Musician.builder().representImagePath(pic).description(description).build();
+        Musician musician = Musician.builder().representImagePath(pic).musicType(MusicType.valueOf(musicType))
+                .description(description).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date myBirth = new Date();
         try {
@@ -59,7 +62,7 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex == "male" ? Sex.MALE : Sex.FEMALE);
+        musician.setSex(sex == "male" ? true : false);
         musician.setPortrait(portrait);
         Musician res = musicianService.addMusician(musician);
 
@@ -119,7 +122,7 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex == "male" ? Sex.MALE : Sex.FEMALE);
+        musician.setSex(sex == "male" ? true : false);
         musician.setId(Long.parseLong(id));
 
         Musician res = musicianService.updateMusicianMsg(musician);
