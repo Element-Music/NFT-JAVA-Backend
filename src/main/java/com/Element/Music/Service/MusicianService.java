@@ -1,5 +1,6 @@
 package com.Element.Music.Service;
 
+import com.Element.Music.Exception.MusicianException;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +11,13 @@ public interface MusicianService {
 
     Musician getMusicianById(long id);
 
-    List<Musician> getMusicianByName(String name);
+    List<Musician> getMusicianByName(String name) throws MusicianException;
 
-    boolean deleteMusician();
+    boolean deleteMusician(long id);
 
     Musician updateMusicianMsg(Musician musician);
 
-    boolean updateSingerPic(Musician musician);
+    boolean updateSingerPic(Musician musician) throws MusicianException;
 
     List<Musician> getAllMusician();
 

@@ -2,6 +2,7 @@ package com.Element.Music.Service.Impl;
 
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
+import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Util.PaternUtil;
@@ -13,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ConsumerServiceImpl implements ConsumerService {
@@ -32,11 +34,6 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public void delete(long consumerId) {
         consumerRepository.deleteById(consumerId);
-    }
-
-    @Override
-    public Consumer update(Consumer consumer) {
-        return null;
     }
 
     @Override
@@ -74,6 +71,9 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public Consumer updateConsumer(Consumer consumer) {
+        if (consumer == null) {//判空操作一大堆
+
+        }
         return consumerRepository.save(consumer);
     }
 
@@ -93,7 +93,7 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public Consumer getConsumerByID(long id) {
-        return consumerRepository.findById(id).get();
+        return consumerRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -103,8 +103,14 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public boolean removeById(long id) {
-        consumerRepository.deleteById(id);
-        return consumerRepository.findById(id).get() == null ? true : false;
+        Optional<Consumer> consumerOptional = consumerRepository.findById(id);
+        if (consumerOptional.get() != null) {
+            Consumer consumer = consumerOptional.get();
+            consumer.setDeleted(true);
+            consumerRepository.save(consumer);
+            return true;
+        }
+        return false;
     }
 
 

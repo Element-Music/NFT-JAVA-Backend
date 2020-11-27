@@ -164,6 +164,17 @@ public class ConsumerController {
         }
     }
 
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public Object logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", 1);
+        jsonObject.put("msg", "成功下线");
+        return jsonObject;
+    }
+
     //    返回所有用户
     @RequestMapping(value = "/allConsumer", method = RequestMethod.GET)
     public JSONArray allUser() {
