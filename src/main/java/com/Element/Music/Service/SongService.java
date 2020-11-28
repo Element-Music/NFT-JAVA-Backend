@@ -9,7 +9,7 @@ public interface SongService {
 
     Song addSong(Song song);
 
-    Song deleteSong(long id);
+    void deleteSong(long id);
 
     Song getSongById(long id);
 

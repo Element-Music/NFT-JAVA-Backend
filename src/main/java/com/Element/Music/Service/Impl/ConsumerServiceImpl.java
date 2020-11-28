@@ -5,9 +5,7 @@ import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Util.PaternUtil;
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -36,12 +34,13 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public Consumer update(Consumer consumer) {
-        return null;
+
+        return consumerRepository.save(consumer);
     }
 
     @Override
     public Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (consumer.getPassWord() == null || !PaternUtil.isUserName(consumer.getName()) || !PaternUtil.isMobile(consumer.getPhoneNum())) {
+        if (consumer.getPassWord() == null || PaternUtil.isUserName(consumer.getName()) || PaternUtil.isMobile(consumer.getPhoneNum())) {
             if (consumer.getPassWord() == null) {
                 throw new ConsumerException("absence of password");
             } else if (!PaternUtil.isMobile(consumer.getPhoneNum())) {

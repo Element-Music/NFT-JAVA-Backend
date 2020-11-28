@@ -1,6 +1,5 @@
 package com.Element.Music.Controller;
 
-import com.Element.Music.Emun.Sex;
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
@@ -15,7 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,6 +43,7 @@ public class ConsumerController {
     //    添加用户
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+
     public Object addUser(HttpServletRequest req, @RequestParam("file") MultipartFile pictureFile) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
@@ -124,33 +126,13 @@ public class ConsumerController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/login/phoneNum", method = RequestMethod.POST)
-    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) {
+    @RequestMapping(value = "/login/phoneNum",method = RequestMethod.POST)
+    public Object phoneNumLogin(HttpServletRequest req, HttpSession session){
         JSONObject jsonObject = new JSONObject();
         String phoneNum = req.getParameter("phoneNum");
         String password = req.getParameter("password");
         boolean res = consumerService.verifyPasswdByUserName(phoneNum, password);
 
-        if (res) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "登录成功");
-            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-            session.setAttribute("phoneNum", phoneNum);
-            return jsonObject;
-        } else {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "用户名或密码错误");
-            return jsonObject;
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/login/email", method = RequestMethod.POST)
-    public Object EmailLogin(HttpServletRequest req, HttpSession session) {
-        JSONObject jsonObject = new JSONObject();
-        String phoneNum = req.getParameter("phoneNum");
-        String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswdByEmail(phoneNum, password);
         if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "登录成功");

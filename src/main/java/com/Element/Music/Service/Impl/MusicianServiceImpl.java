@@ -3,8 +3,6 @@ package com.Element.Music.Service.Impl;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Repository.UserRepository.MusicianRepository;
 import com.Element.Music.Service.MusicianService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,18 +25,19 @@ public class MusicianServiceImpl implements MusicianService {
     @Override
     public Musician getMusicianById(long id) {
         Optional<Musician> optionalMusician = musicianRepository.findById(id);
-        return optionalMusician.get();
+        return optionalMusician.orElse(null);
     }
 
     @Override
     public List<Musician> getMusicianByName(String name) {
-        return null;
+        return musicianRepository.findAllByName(name);
     }
 
 
     @Override
-    public boolean deleteMusician() {
-        return false;
+    public boolean deleteMusician(Musician musician) {
+        musicianRepository.delete(musician);
+        return musicianRepository.findAll().contains(musician);
     }
 
     @Override
@@ -48,6 +47,7 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Override
     public boolean updateSingerPic(Musician musician) {
+
         return false;
     }
 
@@ -59,7 +59,7 @@ public class MusicianServiceImpl implements MusicianService {
     @Override
     public boolean removeById(long id) {
         musicianRepository.deleteById(id);
-        return musicianRepository.findById(id).get() == null ? true : false;
+        return musicianRepository.findById(id).isEmpty();
     }
 
 
