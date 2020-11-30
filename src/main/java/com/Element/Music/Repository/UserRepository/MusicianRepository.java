@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MusicianRepository extends JpaRepository<Musician, Long> {
-    List<Musician> findAllByName(String name);
+    List<Musician> findByDeletedIsFalseAndNameLike(String name);
 }

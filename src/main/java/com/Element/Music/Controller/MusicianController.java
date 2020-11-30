@@ -1,7 +1,7 @@
 package com.Element.Music.Controller;
 
 import com.Element.Music.Emun.MusicType;
-import com.Element.Music.Emun.Sex;
+import com.Element.Music.Exception.MusicianException;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
 import com.alibaba.fastjson.JSONObject;
@@ -85,7 +85,7 @@ public class MusicianController {
 
     //    根据歌手名查找歌手
     @RequestMapping(value = "/name/detail", method = RequestMethod.GET)
-    public Object singerOfName(HttpServletRequest req) {
+    public Object singerOfName(HttpServletRequest req) throws MusicianException {
         String name = req.getParameter("name").trim();
         return musicianService.getMusicianByName(name);
     }

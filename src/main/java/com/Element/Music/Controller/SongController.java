@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/song")
@@ -49,7 +48,7 @@ public class SongController {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
             registry.addResourceHandler("/img/songPic/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/img/songPic/");
-            registry.addResourceHandler("/song/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/song/");
+            registry.addResourceHandler("/song/**").addResourceLocations("/Users/luojianing/Desktop");
         }
     }
 
@@ -196,8 +195,8 @@ public class SongController {
             urlFile.transferTo(dest);
             Song song = Song.builder().representImagePath(storeImagePath).build();
             song.setId(id);
-            Song res = songService.updateSongPic(song);
-            if (res != null) {
+            boolean res = songService.updateSongPic(song);
+            if (res) {
                 jsonObject.put("code", 1);
                 jsonObject.put("avator", storeImagePath);
                 jsonObject.put("msg", "上传成功");

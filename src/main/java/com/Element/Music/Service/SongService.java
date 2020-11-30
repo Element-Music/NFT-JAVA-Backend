@@ -1,5 +1,6 @@
 package com.Element.Music.Service;
 
+import com.Element.Music.Exception.SongException;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 
@@ -9,17 +10,17 @@ public interface SongService {
 
     Song addSong(Song song);
 
-    void deleteSong(long id);
+    boolean deleteSong(long id);
 
     Song getSongById(long id);
 
     List<Song> getSongsByMusician(long musicianId);
 
-    Song updateSong(Song song);
+    boolean updateSong(Song song) throws SongException;
 
-    Song updateSongPic(Song song);
+    boolean updateSongPic(Song song) throws SongException;
 
-    boolean updateSongUrl(Song song);
+    boolean updateSongUrl(Song song) throws SongException;
 
     Musician getMusicianById(long id);
 }

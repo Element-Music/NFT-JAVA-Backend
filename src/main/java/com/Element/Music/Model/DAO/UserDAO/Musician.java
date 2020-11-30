@@ -24,9 +24,9 @@ public class Musician extends User implements Serializable {
 
     private static final long serialVersionUID = 7659253546867155512L;
 
-    @Id
-    @GeneratedValue
-    private long musicianId;
+//    @Id
+//    @GeneratedValue
+//    private long musicianId;
 
     @Column(nullable = false)
     private MusicType musicType;
