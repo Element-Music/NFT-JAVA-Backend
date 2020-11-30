@@ -1,2 +1,7 @@
-package com.Element.Music.Emun;public enum ConsumerRole {
+package com.Element.Music.Emun;
+
+public enum ConsumerRole {
+    NORMAL,
+    VIP,
+    SVIP
 }

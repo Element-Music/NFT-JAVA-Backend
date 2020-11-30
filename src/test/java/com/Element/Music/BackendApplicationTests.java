@@ -2,7 +2,6 @@ package com.Element.Music;
 
 import com.Element.Music.Emun.MusicType;
 import com.Element.Music.Emun.Profession;
-import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;

@@ -1,6 +1,5 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
-import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @AllArgsConstructor

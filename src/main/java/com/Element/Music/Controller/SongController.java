@@ -4,6 +4,7 @@ import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.FileUtils;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +23,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/song")
 public class SongController {
 
     private final SongService songService;
+
+    @Value("${song.path}")
+    private String songPath;
+
+    @Value("${song_pic.path}")
+    private String songPicPath;
 
     public SongController(SongService songService) {
         this.songService = songService;
@@ -48,8 +54,8 @@ public class SongController {
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/img/songPic/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/img/songPic/");
-            registry.addResourceHandler("/song/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/song/");
+            registry.addResourceHandler("/songPic/**").addResourceLocations("file:" + songPicPath);
+            registry.addResourceHandler("/song/**").addResourceLocations("file:" + songPath);
         }
     }
 
