@@ -1,5 +1,6 @@
 package com.Element.Music.Controller;
 
+import com.Element.Music.Exception.SongException;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.FileUtils;
@@ -146,7 +147,7 @@ public class SongController {
     //    更新歌曲信息
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Object updateSongMsg(HttpServletRequest req) {
+    public Object updateSongMsg(HttpServletRequest req) throws SongException {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
         String musicianId = req.getParameter("singerId").trim();
@@ -159,8 +160,8 @@ public class SongController {
         song.setId(Long.parseLong(id));
         song.setLyric(lyric);
 
-        Song res = songService.updateSong(song);
-        if (res != null) {
+        boolean res = songService.updateSong(song);
+        if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "修改成功");
             return jsonObject;
