@@ -13,7 +13,7 @@ public interface ConsumerService {
 
     void delete(long ConsumerId);
 
-//    Consumer update(Consumer consumer);
+    Consumer update(Consumer consumer);
 
     boolean verifyPasswdByEmail(String Email, String passWord);
 

@@ -2,6 +2,7 @@ package com.Element.Music.Service.Impl;
 
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
+import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Util.PaternUtil;

@@ -5,6 +5,7 @@ import com.Element.Music.Exception.MusicianException;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,9 @@ public class MusicianController {
 
     private final MusicianService musicianService;
 
+    @Value("${musician_portrait.path}")
+    private String musicianPortrait;
+
     public MusicianController(MusicianService musicianService) {
         this.musicianService = musicianService;
     }
@@ -32,7 +36,7 @@ public class MusicianController {
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/img/musicianPortrait/**").addResourceLocations("file:/Users/jiangjiay/Element/server/img/musicianPortrait/");
+            registry.addResourceHandler("/musicianPortrait/**").addResourceLocations("file:" + musicianPortrait);
         }
     }
 

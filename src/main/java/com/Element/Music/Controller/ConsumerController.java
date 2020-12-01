@@ -1,11 +1,13 @@
 package com.Element.Music.Controller;
 
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,9 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,6 +27,8 @@ import java.util.Date;
 public class ConsumerController {
 
     private final ConsumerService consumerService;
+    @Value("${consumer_portrait.path}")
+    private String portraitPath;
 
     public ConsumerController(ConsumerService consumerService) {
         this.consumerService = consumerService;
@@ -36,14 +38,14 @@ public class ConsumerController {
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/portrait/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/portrait/");
+            //registry.addResourceHandler("/portrait/**").addResourceLocations("file:C:\\Users\\74061\\Desktop\\");
+            registry.addResourceHandler("/consumerPortrait/**").addResourceLocations("file:" + portraitPath);
         }
     }
 
     //    添加用户
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-
     public Object addUser(HttpServletRequest req, @RequestParam("file") MultipartFile pictureFile) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
@@ -126,8 +128,8 @@ public class ConsumerController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/login/phoneNum",method = RequestMethod.POST)
-    public Object phoneNumLogin(HttpServletRequest req, HttpSession session){
+    @RequestMapping(value = "/login/phoneNum", method = RequestMethod.POST)
+    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
         String phoneNum = req.getParameter("phoneNum");
         String password = req.getParameter("password");
@@ -144,6 +146,17 @@ public class ConsumerController {
             jsonObject.put("msg", "用户名或密码错误");
             return jsonObject;
         }
+    }
+
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public Object logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", 1);
+        jsonObject.put("msg", "成功下线");
+        return jsonObject;
     }
 
     //    返回所有用户
