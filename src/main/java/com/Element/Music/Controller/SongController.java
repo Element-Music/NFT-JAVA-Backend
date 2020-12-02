@@ -5,6 +5,7 @@ import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.FileUtils;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +31,11 @@ public class SongController {
 
     private final SongService songService;
 
-//    public static void main(String[] args){
-//        System.out.println(System.getProperty("user.dir") + System.getProperty("file.separator") + "song");
-//    }
+    @Value("${song_pic.path}")
+    private String songPicture;
+
+    @Value("${song.path}")
+    private String songPath;
 
     public SongController(SongService songService) {
         this.songService = songService;
@@ -52,8 +55,7 @@ public class SongController {
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//            registry.addResourceHandler("/img/songPic/**").addResourceLocations("file:/Users/jiangjiayi/Documents/Element/server/img/songPic/");
-            registry.addResourceHandler("/song/**").addResourceLocations("file:/Users/luojianing/Desktop/");
+            registry.addResourceHandler("/img/songPic/**").addResourceLocations("file:" + songPicture);
         }
     }
 

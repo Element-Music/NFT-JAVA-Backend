@@ -48,7 +48,7 @@ public class ConsumerServiceImpl implements ConsumerService {
             }
         }
         String pwd = consumer.getPassWord();
-        consumer.setPassWord(String.valueOf(MD5.digest(pwd.getBytes("utf-8"))));
+        consumer.setPassWord(DigestUtils.md5DigestAsHex(pwd.getBytes()));
         return consumerRepository.save(consumer);
     }
 
@@ -63,13 +63,13 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public boolean verifyPasswdByPhoneNum(String phoneNum, String passWord) throws UnsupportedEncodingException {
         return PaternUtil.isMobile(phoneNum) && consumerRepository.
-                findByPhoneNumAndPassWord(phoneNum, DigestUtils.md5DigestAsHex(passWord.getBytes())) != null;
+                findByPhoneNumAndPassWord(phoneNum, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
     }
 
     @Override
     public boolean verifyPasswdByEmail(String Email, String passWord) throws UnsupportedEncodingException {
         return PaternUtil.isEmail(Email) && consumerRepository.
-                findByEmailAndPassWord(Email, String.valueOf(MD5.digest(passWord.getBytes("utf-8")))) != null;
+                findByEmailAndPassWord(Email, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
     }
 
     @Override

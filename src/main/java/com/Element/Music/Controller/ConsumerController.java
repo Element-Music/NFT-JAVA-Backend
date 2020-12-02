@@ -8,7 +8,6 @@ import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -30,7 +29,7 @@ public class ConsumerController {
 
     private final ConsumerService consumerService;
     @Value("${consumer_portrait.path}")
-    private String portraitPath;
+    private String consumerPortrait;
 
     public ConsumerController(ConsumerService consumerService) {
         this.consumerService = consumerService;
@@ -40,8 +39,7 @@ public class ConsumerController {
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            //registry.addResourceHandler("/portrait/**").addResourceLocations("file:C:\\Users\\74061\\Desktop\\");
-            registry.addResourceHandler("/consumerPortrait/**").addResourceLocations("file:" + portraitPath);
+            registry.addResourceHandler("/img/consumerPic/**").addResourceLocations("file:" + consumerPortrait);
         }
     }
 
@@ -73,7 +71,7 @@ public class ConsumerController {
             e.printStackTrace();
         }
         consumer.setName(username);
-        consumer.setPassWord(DigestUtils.md5DigestAsHex(password.getBytes()));
+        consumer.setPassWord(password);
         consumer.setSex(sex.equals("male") ? true : false);//sex为boolean类型，true代表男性，false代表女性
         if (phoneNum == "") {
             consumer.setPhoneNum(null);
