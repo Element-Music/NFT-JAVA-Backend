@@ -14,6 +14,8 @@ public interface SongService {
 
     Song getSongById(long id);
 
+    List<Song> getAllSong();
+
     List<Song> getSongsByMusician(long musicianId);
 
     boolean updateSong(Song song) throws SongException;

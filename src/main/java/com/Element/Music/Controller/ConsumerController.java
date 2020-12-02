@@ -1,14 +1,14 @@
 package com.Element.Music.Controller;
 
-import com.Element.Music.Emun.Sex;
+//import com.Element.Music.Emun.Sex;
+
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -16,7 +16,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -46,7 +48,7 @@ public class ConsumerController {
     //    添加用户
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Object addUser(HttpServletRequest req, @RequestParam("file") MultipartFile pictureFile) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public Object addUser(HttpServletRequest req) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
         String password = req.getParameter("password").trim();
@@ -71,7 +73,7 @@ public class ConsumerController {
             e.printStackTrace();
         }
         consumer.setName(username);
-        consumer.setPassWord(password);
+        consumer.setPassWord(DigestUtils.md5DigestAsHex(password.getBytes()));
         consumer.setSex(sex.equals("male") ? true : false);//sex为boolean类型，true代表男性，false代表女性
         if (phoneNum == "") {
             consumer.setPhoneNum(null);
@@ -106,13 +108,14 @@ public class ConsumerController {
 
     //    判断是否登录成功
     @ResponseBody
+    @Deprecated
     @RequestMapping(value = "/login/username", method = RequestMethod.POST)
-    public Object userNameLogin(HttpServletRequest req, HttpSession session) {
+    public Object userNameLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
 
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswdByPhoneNum(username, password);
+        boolean res = consumerService.verifyPasswdByUserName(username, password);
 
         if (res) {
             jsonObject.put("code", 1);
@@ -129,17 +132,38 @@ public class ConsumerController {
 
     @ResponseBody
     @RequestMapping(value = "/login/phoneNum", method = RequestMethod.POST)
-    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) {
+    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
         String phoneNum = req.getParameter("phoneNum");
         String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswdByUserName(phoneNum, password);
+        boolean res = consumerService.verifyPasswdByPhoneNum(phoneNum, password);
 
         if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "登录成功");
             //jsonObject.put("userMsg", consumerService.loginStatus(username));
             session.setAttribute("phoneNum", phoneNum);
+            return jsonObject;
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "用户名或密码错误");
+            return jsonObject;
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/login/email", method = RequestMethod.POST)
+    public Object emailLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
+        JSONObject jsonObject = new JSONObject();
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        boolean res = consumerService.verifyPasswdByEmail(email, password);
+
+        if (res) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "登录成功");
+            //jsonObject.put("userMsg", consumerService.loginStatus(username));
+            session.setAttribute("email", email);
             return jsonObject;
         } else {
             jsonObject.put("code", 0);
@@ -160,16 +184,21 @@ public class ConsumerController {
     }
 
     //    返回所有用户
-    @RequestMapping(value = "/allConsumer", method = RequestMethod.GET)
-    public JSONArray allUser() {
-        return JSONArray.parseArray(JSON.toJSONString(consumerService.getAllUser()));
+//    @RequestMapping(value = "/allConsumer", method = RequestMethod.GET)
+//    public JSONArray allUser() {
+//        return JSONArray.parseArray(JSconsumerService.getAllUser()));
+//    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public Object allSinger() {
+        return consumerService.getAllUser();
     }
 
     //    返回指定ID的用户
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public JSONObject userOfId(HttpServletRequest req) {
+    public Object userOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return (JSONObject) JSONObject.toJSON(consumerService.getConsumerByID(Long.parseLong(id)));
+        return consumerService.getConsumerByID(Long.parseLong(id));
     }
 
     //    删除用户
@@ -182,7 +211,7 @@ public class ConsumerController {
     //    更新用户信息
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Object updateUserMsg(HttpServletRequest req) {
+    public Object updateUserMsg(HttpServletRequest req) throws ConsumerException {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
         String username = req.getParameter("username").trim();
@@ -218,8 +247,8 @@ public class ConsumerController {
         consumer.setPortrait(portrait);
         consumer.setUpdateTime(new Date());
 
-        Consumer res = consumerService.updateConsumer(consumer);
-        if (res != null) {
+        boolean res = consumerService.updateConsumer(consumer);
+        if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "修改成功");
             return jsonObject;
@@ -242,14 +271,14 @@ public class ConsumerController {
             return jsonObject;
         }
         String fileName = System.currentTimeMillis() + pictureFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "portrait";
+        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "consumerPic";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String portraitPath = "/portrait/" + fileName;
+        String portraitPath = "/img/consumerPic/" + fileName;
         try {
             pictureFile.transferTo(dest);
             Consumer consumer = new Consumer();

@@ -21,11 +21,12 @@ class BackendApplicationTests {
 
     @Test
     void contextLoads() {
-        Song song = Song.builder().audioPath("audioPath").description("description")
-                .musicType(MusicType.JAZZ).lyric("lyric").name("song").representImagePath("imagePath")
+        Song song = Song.builder().description("description")
+                .musicType(MusicType.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
                 .url("http://...com").build();
         Set<Song> songs = new HashSet<>();
         songs.add(song);
+
         Musician musician = Musician.builder().musicType(MusicType.JAZZ).description("这是一个歌手").profession(Profession.DOCTOR)
                 .representativeWork("lujing").representImagePath("imagelujing").songs(songs).weibo("weibo").build();
         musician.setName("name");

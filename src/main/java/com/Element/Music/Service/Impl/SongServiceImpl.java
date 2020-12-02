@@ -4,7 +4,7 @@ import com.Element.Music.Exception.SongException;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Repository.MusicRepository.SongRepository;
-import com.Element.Music.Repository.UserRepository.MusicianRepository;
+import com.Element.Music.Service.MusicianService;
 import com.Element.Music.Service.SongService;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +14,15 @@ import java.util.Optional;
 @Service
 public class SongServiceImpl implements SongService {
 
-    private final MusicianRepository musicianRepository;
-
     private final SongRepository songRepository;
 
-    public SongServiceImpl(MusicianRepository musicianRepository, SongRepository songRepository) {
+    private final MusicianService musicianService;
+
+    public SongServiceImpl(MusicianService musicianService, SongRepository songRepository) {
 
         this.songRepository = songRepository;
 
-        this.musicianRepository = musicianRepository;
+        this.musicianService = musicianService;
     }
 
     @Override
@@ -33,8 +33,8 @@ public class SongServiceImpl implements SongService {
     @Override
     public boolean deleteSong(long id) {
         Optional<Song> songOptional = songRepository.findById(id);
-        if (songOptional.get() != null) {
-            Song song = songOptional.get();
+        if (songOptional.orElse(null) != null) {
+            Song song = songOptional.orElse(null);
             song.setDeleted(true);
             songRepository.save(song);
             return true;
@@ -43,26 +43,34 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public List<Song> getAllSong() {
+        return songRepository.findAll();
+    }
+
+    @Override
     public Song getSongById(long id) {
         Optional<Song> songOptional = songRepository.findById(id);
-        return songOptional.get();
+        return songOptional.orElse(null);
     }
 
     @Override
     public List<Song> getSongsByMusician(long musicianId) {
-
-        return songRepository.findAllByMusician(musicianId);
+//        return songRepository.findAllByMusician(musicianService.getMusicianById(musicianId));
+        return songRepository.findAllByMusicianAndDeletedIsFalse(musicianService.getMusicianById(musicianId));
     }
 
     @Override
-    //need check
     public boolean updateSong(Song song) throws SongException{
         if(song == null)
             throw new SongException("更改歌曲接口缺失song");
         Optional<Song> songOptional = songRepository.findById(song.getId());
-        if (songOptional.get() != null || songOptional.get().isDeleted() == false) {
-            Song song1 = songOptional.get();
+        if (songOptional.get() != null || !songOptional.get().isDeleted()) {
+            Song song1 = songOptional.orElse(null);
             song1.setId(song.getId());
+            song1.setSongName(song.getSongName());
+            song1.setMusicianName(song.getMusicianName());
+            song1.setDescription(song.getDescription());
+            song1.setLyric(song.getLyric());
             songRepository.save(song1);
             return true;
         }
@@ -77,8 +85,8 @@ public class SongServiceImpl implements SongService {
             else throw new SongException("更改图片接口缺失represent_image_path");
         }
         Optional<Song> songOptional = songRepository.findById(song.getId());
-        if (songOptional.get() != null || songOptional.get().isDeleted() == false) {
-            Song song1 = songOptional.get();
+        if (songOptional.orElse(null) != null || !songOptional.orElse(null).isDeleted()) {
+            Song song1 = songOptional.orElse(null);
             song1.setRepresentImagePath(song.getRepresentImagePath());
             songRepository.save(song1);
             return true;
@@ -90,12 +98,12 @@ public class SongServiceImpl implements SongService {
     public boolean updateSongUrl(Song song) throws SongException {
         if (song == null || song.getUrl() == null) {
             if (song == null)
-                throw new SongException("更改图片接口缺失song");
-            else throw new SongException("更改图片接口缺失url");
+                throw new SongException("更改URL接口缺失song");
+            else throw new SongException("更改URL接口缺失url");
         }
         Optional<Song> songOptional = songRepository.findById(song.getId());
-        if (songOptional.get() != null || songOptional.get().isDeleted() == false) {
-            Song song1 = songOptional.get();
+        if (songOptional.orElse(null) != null || songOptional.orElse(null).isDeleted() == false) {
+            Song song1 = songOptional.orElse(null);
             song1.setUrl(song.getUrl());
             songRepository.save(song1);
             return true;
@@ -105,7 +113,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public Musician getMusicianById(long id) {
-        Optional<Musician> optionalMusician = musicianRepository.findById(id);
-        return optionalMusician.get();
+        Musician musician = musicianService.getMusicianById(id);
+        return musician;
     }
 }

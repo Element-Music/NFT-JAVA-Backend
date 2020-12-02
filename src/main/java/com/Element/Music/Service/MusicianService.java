@@ -14,7 +14,7 @@ public interface MusicianService {
 
     boolean deleteMusician(long id);
 
-    Musician updateMusicianMsg(Musician musician);
+    boolean updateMusicianMsg(Musician musician) throws MusicianException;
 
     boolean updateSingerPic(Musician musician) throws MusicianException;
 

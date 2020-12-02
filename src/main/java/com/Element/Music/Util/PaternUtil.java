@@ -20,10 +20,10 @@ public class PaternUtil {
         return m.matches ();
     }
     //邮箱正则
-    public static boolean isEmail(String UserName) {
+    public static boolean isEmail(String Email) {
         String regex = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
         Pattern p = Pattern.compile ( regex, Pattern.CASE_INSENSITIVE );
-        Matcher m = p.matcher ( UserName );
+        Matcher m = p.matcher ( Email );
         return m.matches ();
     }
 }

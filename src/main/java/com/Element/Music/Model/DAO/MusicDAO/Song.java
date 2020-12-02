@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity(name = "Song")
@@ -22,10 +21,10 @@ import java.util.Set;
 public class Song extends BaseEntity {
 
     @Column(nullable = false)
-    private String name;
+    private String musicianName;
 
     @Column(nullable = false)
-    private String audioPath;
+    private String songName;
 
     private String representImagePath;
 

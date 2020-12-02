@@ -20,13 +20,14 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Override
     public Musician addMusician(Musician musician) {
+
         return musicianRepository.save(musician);
     }
 
     @Override
     public Musician getMusicianById(long id) {
         Optional<Musician> optionalMusician = musicianRepository.findById(id);
-        return optionalMusician.get();
+        return optionalMusician.orElse(null);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class MusicianServiceImpl implements MusicianService {
     @Override
     public boolean deleteMusician(long id) {
         Optional<Musician> musicianOptional = musicianRepository.findById(id);
-        if (musicianOptional.get() != null) {
+        if (musicianOptional.orElse(null) != null) {
             Musician musician = musicianOptional.get();
             musician.setDeleted(true);
             musicianRepository.save(musician);
@@ -50,8 +51,23 @@ public class MusicianServiceImpl implements MusicianService {
     }
 
     @Override
-    public Musician updateMusicianMsg(Musician musician) {
-        return null;
+    public boolean updateMusicianMsg(Musician musician) throws MusicianException{
+        if(musician == null)
+            throw new MusicianException("更改歌手接口缺失musician");
+        Optional<Musician> musicianOptional = musicianRepository.findById(musician.getId());
+        if (musicianOptional.get() != null || !musicianOptional.get().isDeleted()) {
+            Musician musician1 = musicianOptional.orElse(null);
+            musician1.setId(musician.getId());
+            musician1.setName(musician.getName());
+            musician1.setSex(musician.isSex());
+            musician1.setPortrait(musician.getPortrait());
+            musician1.setBirth(musician.getBirth());
+            musician1.setLocation(musician.getLocation());
+            musician1.setDescription(musician.getDescription());
+            musicianRepository.save(musician1);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -78,8 +94,16 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Override
     public boolean removeById(long id) {
-        musicianRepository.deleteById(id);
-        return musicianRepository.findById(id).get() == null;
+//        musicianRepository.deleteById(id);
+//        return musicianRepository.findById(id).get() == null;
+        Optional<Musician> musicianOptional = musicianRepository.findById(id);
+        if (musicianOptional.orElse(null) != null) {
+            Musician musician = musicianOptional.orElse(null);
+            musician.setDeleted(true);
+            musicianRepository.save(musician);
+            return true;
+        }
+        return false;
     }
 
 

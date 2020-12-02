@@ -5,7 +5,6 @@ import com.Element.Music.Exception.MusicianException;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,8 +24,8 @@ public class MusicianController {
 
     private final MusicianService musicianService;
 
-    @Value("${musician_portrait.path}")
-    private String musicianPortrait;
+//    @Value("${musician_portrait.path}")
+//    private String musicianPortrait;
 
     public MusicianController(MusicianService musicianService) {
         this.musicianService = musicianService;
@@ -36,7 +35,7 @@ public class MusicianController {
     public class MyPicConfig implements WebMvcConfigurer {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/musicianPortrait/**").addResourceLocations("file:" + musicianPortrait);
+            registry.addResourceHandler("/img/singerPic/**").addResourceLocations("file:/Users/luojianing/Desktop/");
         }
     }
 
@@ -51,11 +50,11 @@ public class MusicianController {
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
         String description = req.getParameter("description").trim();
-        String portrait = req.getParameter("musicianPortrait").trim();
+        String portrait = req.getParameter("portrait").trim();
         String musicType = req.getParameter("musicType").trim();
 
         Musician musician = Musician.builder().representImagePath(pic).musicType(MusicType.valueOf(musicType))
-                .description(description).build();
+                .description(description).name(name).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date myBirth = new Date();
         try {
@@ -66,7 +65,7 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex == "male" ? true : false);
+        musician.setSex(sex.equals("male") ? true : false);
         musician.setPortrait(portrait);
         Musician res = musicianService.addMusician(musician);
 
@@ -105,7 +104,7 @@ public class MusicianController {
     //    更新歌手信息
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Object updateSingerMsg(HttpServletRequest req) {
+    public Object updateSingerMsg(HttpServletRequest req) throws MusicianException {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
         String name = req.getParameter("name").trim();
@@ -113,7 +112,7 @@ public class MusicianController {
         String pic = req.getParameter("pic").trim();
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
-        String description = req.getParameter("introduction").trim();
+        String description = req.getParameter("description").trim();
 
         Musician musician = Musician.builder().representImagePath(pic).description(description).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -126,11 +125,11 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex == "male" ? true : false);
+        musician.setSex(sex.equals("male")? true : false);
         musician.setId(Long.parseLong(id));
 
-        Musician res = musicianService.updateMusicianMsg(musician);
-        if (res != null) {
+        boolean res = musicianService.updateMusicianMsg(musician);
+        if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "修改成功");
             return jsonObject;
@@ -143,16 +142,16 @@ public class MusicianController {
 
     //    更新歌手头像
     @ResponseBody
-    @RequestMapping(value = "/avatar/update", method = RequestMethod.POST)
-    public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") long id) {
+    @RequestMapping(value = "/portrait/update", method = RequestMethod.POST)
+    public Object updateSingerPic(@RequestParam("file") MultipartFile portraitFile, @RequestParam("id") long id) {
         JSONObject jsonObject = new JSONObject();
 
-        if (avatorFile.isEmpty()) {
+        if (portraitFile.isEmpty()) {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "文件上传失败！");
             return jsonObject;
         }
-        String fileName = System.currentTimeMillis() + avatorFile.getOriginalFilename();
+        String fileName = System.currentTimeMillis() + portraitFile.getOriginalFilename();
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "singerPic";
         File file1 = new File(filePath);
         if (!file1.exists()) {
@@ -160,15 +159,17 @@ public class MusicianController {
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String storeAvatorPath = "/img/singerPic/" + fileName;
+        String storePortraitPath = "/img/singerPic/" + fileName;
+
         try {
-            avatorFile.transferTo(dest);
-            Musician musician = Musician.builder().representImagePath(storeAvatorPath).build();
+            portraitFile.transferTo(dest);
+            Musician musician = Musician.builder().build();
             musician.setId(id);
+            musician.setPortrait(storePortraitPath);
             boolean res = musicianService.updateSingerPic(musician);
             if (res) {
                 jsonObject.put("code", 1);
-                jsonObject.put("pic", storeAvatorPath);
+                jsonObject.put("pic", storePortraitPath);
                 jsonObject.put("msg", "上传成功");
                 return jsonObject;
             } else {

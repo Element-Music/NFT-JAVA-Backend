@@ -31,6 +31,12 @@ public class Musician extends User implements Serializable {
     @Column(nullable = false)
     private MusicType musicType;
 
+    @Column(nullable = false)
+    private String name;
+
+//    @Column(nullable = false)
+//    private String sex;
+
     @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Song> songs;
 

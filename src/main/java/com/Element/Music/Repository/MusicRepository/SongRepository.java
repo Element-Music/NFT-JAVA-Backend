@@ -12,7 +12,9 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
 //    List<Song> findAllByName(String song);
 
-    List<Song> findAllByMusician(long musicianId);
+    List<Song> findAllByMusicianAndDeletedIsFalse(Musician musician);
 
-    Musician findMusicianById(long musicianId);
+    List<Song> findAllByMusician(Musician musician);
+
+//    Musician findMusicianById(long musicianId);
 }
