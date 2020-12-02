@@ -56,6 +56,7 @@ public class SongController {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
             registry.addResourceHandler("/img/songPic/**").addResourceLocations("file:" + songPicture);
+            registry.addResourceHandler("/song/**").addResourceLocations("file:" + songPath);
         }
     }
 
