@@ -37,6 +37,9 @@ public class SongController {
     @Value("${song.path}")
     private String songPath;
 
+    @Value("${user.path}")
+    private String userPath;
+
     public SongController(SongService songService) {
         this.songService = songService;
     }
@@ -78,7 +81,7 @@ public class SongController {
             return jsonObject;
         }
         String fileName = mpfile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
+        String filePath = userPath + "song";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
@@ -91,7 +94,6 @@ public class SongController {
             mpfile.transferTo(dest);
             Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).musicianName(musicianName)
                     .songName(songName).lyric(lyric).url(storeUrlPath).representImagePath(pic).build();
-//            song.setUrl(storeUrlPath);
             Song res = songService.addSong(song);
             if (res != null) {
                 jsonObject.put("code", 1);
@@ -195,10 +197,15 @@ public class SongController {
             return jsonObject;
         }
         String fileName = System.currentTimeMillis() + urlFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "songPic";
+        String filePath = userPath + "img";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
+        }
+        filePath += System.getProperty("file.separator") + "songPic";
+        File file2 = new File(filePath);
+        if (!file2.exists()) {
+            file2.mkdir();
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
@@ -240,7 +247,7 @@ public class SongController {
             return jsonObject;
         }
         String fileName = urlFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
+        String filePath = userPath + "song";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();

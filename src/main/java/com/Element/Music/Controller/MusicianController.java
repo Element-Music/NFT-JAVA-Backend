@@ -28,6 +28,9 @@ public class MusicianController {
     @Value("${musician_portrait.path}")
     private String musicianPortrait;
 
+    @Value("${user.path}")
+    private String userPath;
+
     public MusicianController(MusicianService musicianService) {
         this.musicianService = musicianService;
     }
@@ -153,10 +156,15 @@ public class MusicianController {
             return jsonObject;
         }
         String fileName = System.currentTimeMillis() + portraitFile.getOriginalFilename();
-        String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "singerPic";
+        String filePath = userPath + "img";
         File file1 = new File(filePath);
         if (!file1.exists()) {
             file1.mkdir();
+        }
+        filePath +=  System.getProperty("file.separator") + "singerPic";
+        File file2 = new File(filePath);
+        if (!file2.exists()) {
+            file2.mkdir();
         }
 
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
