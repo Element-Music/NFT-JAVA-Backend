@@ -3,7 +3,6 @@ package com.Element.Music.Controller;
 //import com.Element.Music.Emun.Sex;
 
 import com.Element.Music.Exception.ConsumerException;
-import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSONObject;
@@ -146,10 +145,7 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         String songId = req.getParameter("songId");
         String consumerId = req.getParameter("consumerId");
-        Song song = new Song();
-        song.setId(Long.parseLong(songId));
-//        Song song = songService.getSongById(Long.parseLong(songId));
-        consumerService.addToCollection(Long.parseLong(consumerId), song);
+        consumerService.addToCollection(Long.parseLong(consumerId), Long.parseLong(songId));
         return consumerService.getCollection(Long.parseLong(consumerId));
     }
 

@@ -19,7 +19,7 @@ public interface ConsumerService {
 
     Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
-    void addToCollection(long consumerId, Song song);
+    void addToCollection(long consumerId, long songId);
 
     Set<Song> getCollection(long consumerId);
 

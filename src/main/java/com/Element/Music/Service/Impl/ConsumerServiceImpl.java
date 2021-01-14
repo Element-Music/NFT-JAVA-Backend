@@ -6,6 +6,7 @@ import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Repository.MusicRepository.SongRepository;
 import com.Element.Music.Service.ConsumerService;
+import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.PaternUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -22,10 +23,15 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     private final ConsumerRepository consumerRepository;
 
+    private final SongService songService;
+
     private final MessageDigest MD5 = MessageDigest.getInstance("MD5");
 
-    public ConsumerServiceImpl(ConsumerRepository consumerRepository) throws NoSuchAlgorithmException {
+    public ConsumerServiceImpl(ConsumerRepository consumerRepository, SongService songService) throws NoSuchAlgorithmException {
+
         this.consumerRepository = consumerRepository;
+
+        this.songService = songService;
     }
 
     @Override
@@ -80,12 +86,21 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    public void addToCollection(long consumerId, Song song) {
-        consumerRepository.getOne(consumerId).getCollections().add(song);
+    public void addToCollection(long consumerId, long songId) {
+//        Song song = songService.getSongById(songId);
+//        Optional<Consumer> consumerList = consumerRepository.findById(consumerId);
+//        Consumer consumer = consumerList.get();
+//        Set<Song> likes = consumer.getCollections();
+//        likes.add(song);
+//        consumer.setCollections(likes);
+        consumerRepository.getOne(consumerId).getCollections().add(songService.getSongById(songId));
     }
 
     @Override
     public Set<Song> getCollection(long consumerId){
+//        Optional<Consumer> consumerList = consumerRepository.findById(consumerId);
+//        Consumer consumer = consumerList.get();
+//        return consumer.getCollections();
         return consumerRepository.getOne(consumerId).getCollections();
     }
 
