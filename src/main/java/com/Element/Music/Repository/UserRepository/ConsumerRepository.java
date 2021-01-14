@@ -8,9 +8,13 @@ import java.util.Optional;
 
 @Repository
 public interface ConsumerRepository extends JpaRepository<Consumer, Long> {
-    Optional<Consumer> findByNameAndPassWord(String name, String password);
+//    Optional<Consumer> findByNameAndPassWord(String name, String password);
 
     Optional<Consumer> findByPhoneNumAndPassWord(String phoneNum, String password);
 
     Optional<Consumer> findByEmailAndPassWord(String Email, String password);
+
+    Consumer findByEmail(String Email);
+
+    Consumer findByPhoneNum(String PhoneNum);
 }

@@ -3,6 +3,7 @@ package com.Element.Music.Controller;
 //import com.Element.Music.Emun.Sex;
 
 import com.Element.Music.Exception.ConsumerException;
+import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
 import com.alibaba.fastjson.JSONObject;
@@ -103,7 +104,7 @@ public class ConsumerController {
             return jsonObject;
         } else {
             jsonObject.put("code", 0);
-            jsonObject.put("msg", "注册失败");
+            jsonObject.put("msg", "注册失败,该用户已存在");
             return jsonObject;
         }
     }
@@ -111,68 +112,114 @@ public class ConsumerController {
     //    判断是否登录成功
     @ResponseBody
     @Deprecated
-    @RequestMapping(value = "/login/username", method = RequestMethod.POST)
-    public Object userNameLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Object login(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
 
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswdByUserName(username, password);
+        int res = consumerService.verifyPasswdByUser(username, password);
 
-        if (res) {
-            jsonObject.put("code", 1);
+        if (res == 0) {
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "登录成功");
             //jsonObject.put("userMsg", consumerService.loginStatus(username));
             session.setAttribute("username", username);
             return jsonObject;
-        } else {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "用户名或密码错误");
-            return jsonObject;
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/login/phoneNum", method = RequestMethod.POST)
-    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
-        JSONObject jsonObject = new JSONObject();
-        String phoneNum = req.getParameter("phoneNum");
-        String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswdByPhoneNum(phoneNum, password);
-
-        if (res) {
+        } else if (res == 1){
             jsonObject.put("code", 1);
-            jsonObject.put("msg", "登录成功");
-            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-            session.setAttribute("phoneNum", phoneNum);
+            jsonObject.put("msg", "用户名格式错误");
             return jsonObject;
-        } else {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "用户名或密码错误");
+        } else if (res == 2){
+            jsonObject.put("code", 2);
+            jsonObject.put("msg", "该账户未注册");
+            return jsonObject;
+        } else{
+            jsonObject.put("code", 3);
+            jsonObject.put("msg", "用户名和密码不匹配");
             return jsonObject;
         }
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/login/email", method = RequestMethod.POST)
-    public Object emailLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
+    @RequestMapping(value = "/collection", method = RequestMethod.GET)
+    public Object collect(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
-        boolean res = consumerService.verifyPasswdByEmail(email, password);
-
-        if (res) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "登录成功");
-            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-            session.setAttribute("email", email);
-            return jsonObject;
-        } else {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "用户名或密码错误");
-            return jsonObject;
-        }
+        String songId = req.getParameter("songId");
+        String consumerId = req.getParameter("consumerId");
+        Song song = new Song();
+        song.setId(Long.parseLong(songId));
+//        Song song = songService.getSongById(Long.parseLong(songId));
+        consumerService.addToCollection(Long.parseLong(consumerId), song);
+        return consumerService.getCollection(Long.parseLong(consumerId));
     }
+
+
+//    @ResponseBody
+//    @Deprecated
+//    @RequestMapping(value = "/login/username", method = RequestMethod.POST)
+//    public Object userNameLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
+//
+//        JSONObject jsonObject = new JSONObject();
+//        String username = req.getParameter("username");
+//        String password = req.getParameter("password");
+//        boolean res = consumerService.verifyPasswdByUserName(username, password);
+//
+//        if (res) {
+//            jsonObject.put("code", 1);
+//            jsonObject.put("msg", "登录成功");
+//            //jsonObject.put("userMsg", consumerService.loginStatus(username));
+//            session.setAttribute("username", username);
+//            return jsonObject;
+//        } else {
+//            jsonObject.put("code", 0);
+//            jsonObject.put("msg", "用户名或密码错误");
+//            return jsonObject;
+//        }
+//    }
+//
+//
+//
+//    @ResponseBody
+//    @RequestMapping(value = "/login/phoneNum", method = RequestMethod.POST)
+//    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
+//        JSONObject jsonObject = new JSONObject();
+//        String phoneNum = req.getParameter("phoneNum");
+//        String password = req.getParameter("password");
+//        boolean res = consumerService.verifyPasswdByPhoneNum(phoneNum, password);
+//
+//        if (res) {
+//            jsonObject.put("code", 1);
+//            jsonObject.put("msg", "登录成功");
+//            //jsonObject.put("userMsg", consumerService.loginStatus(username));
+//            session.setAttribute("phoneNum", phoneNum);
+//            return jsonObject;
+//        } else {
+//            jsonObject.put("code", 0);
+//            jsonObject.put("msg", "用户名或密码错误");
+//            return jsonObject;
+//        }
+//    }
+//
+//    @ResponseBody
+//    @RequestMapping(value = "/login/email", method = RequestMethod.POST)
+//    public Object emailLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
+//        JSONObject jsonObject = new JSONObject();
+//        String email = req.getParameter("email");
+//        String password = req.getParameter("password");
+//        boolean res = consumerService.verifyPasswdByEmail(email, password);
+//
+//        if (res) {
+//            jsonObject.put("code", 1);
+//            jsonObject.put("msg", "登录成功");
+//            //jsonObject.put("userMsg", consumerService.loginStatus(username));
+//            session.setAttribute("email", email);
+//            return jsonObject;
+//        } else {
+//            jsonObject.put("code", 0);
+//            jsonObject.put("msg", "用户名或密码错误");
+//            return jsonObject;
+//        }
+//    }
 
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)

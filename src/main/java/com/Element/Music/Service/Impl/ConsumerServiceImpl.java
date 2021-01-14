@@ -1,12 +1,15 @@
 package com.Element.Music.Service.Impl;
 
 import com.Element.Music.Exception.ConsumerException;
+import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
+import com.Element.Music.Repository.MusicRepository.SongRepository;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Util.PaternUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import java.util.*;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -16,7 +19,6 @@ import java.util.Optional;
 
 @Service
 public class ConsumerServiceImpl implements ConsumerService {
-
 
     private final ConsumerRepository consumerRepository;
 
@@ -36,14 +38,39 @@ public class ConsumerServiceImpl implements ConsumerService {
         consumerRepository.deleteById(consumerId);
     }
 
+//    @Override
+//    public Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+//        if (consumer.getPassWord() == null || !PaternUtil.isUserName(consumer.getName()) || !PaternUtil.isMobile(consumer.getPhoneNum())) {
+//            if (consumer.getPassWord() == null) {
+//                throw new ConsumerException("absence of password");
+//            } else if (!PaternUtil.isMobile(consumer.getPhoneNum())) {
+//                throw new ConsumerException("phoneNumber is illegal");
+//            } else {
+//                throw new ConsumerException("userName is illegal");
+//            }
+//        }
+//        String pwd = consumer.getPassWord();
+//        consumer.setPassWord(DigestUtils.md5DigestAsHex(pwd.getBytes()));
+//        return consumerRepository.save(consumer);
+//    }
+
     @Override
     public Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (consumer.getPassWord() == null || !PaternUtil.isUserName(consumer.getName()) || !PaternUtil.isMobile(consumer.getPhoneNum())) {
+        if (consumer.getPhoneNum() == null && consumer.getEmail() == null) {
+            throw new ConsumerException("absence of email and phoneNum");
+        } else if (consumerRepository.findByPhoneNum(consumer.getPhoneNum()) != null ||
+                consumerRepository.findByEmail(consumer.getEmail()) != null) {
+            return null;
+        } else if (consumer.getPassWord() == null || !PaternUtil.isUserName(consumer.getName()) ||
+                (consumer.getPhoneNum() == "" && !PaternUtil.isMobile(consumer.getPhoneNum())) ||
+                (consumer.getEmail() == "" && !PaternUtil.isEmail(consumer.getEmail()))) {
             if (consumer.getPassWord() == null) {
                 throw new ConsumerException("absence of password");
-            } else if (!PaternUtil.isMobile(consumer.getPhoneNum())) {
+            } else if (consumer.getPhoneNum() == "" && !PaternUtil.isMobile(consumer.getPhoneNum())) {
                 throw new ConsumerException("phoneNumber is illegal");
-            } else {
+            } else if (consumer.getEmail() == "" && !PaternUtil.isEmail(consumer.getEmail())) {
+                throw new ConsumerException("email is illegal");
+            }else {
                 throw new ConsumerException("userName is illegal");
             }
         }
@@ -52,25 +79,62 @@ public class ConsumerServiceImpl implements ConsumerService {
         return consumerRepository.save(consumer);
     }
 
+    @Override
+    public void addToCollection(long consumerId, Song song) {
+        consumerRepository.getOne(consumerId).getCollections().add(song);
+    }
+
+    @Override
+    public Set<Song> getCollection(long consumerId){
+        return consumerRepository.getOne(consumerId).getCollections();
+    }
+
+    @Override
+    public void addToPaidList(long consumerId, Song song) {
+        consumerRepository.getOne(consumerId).getCollections().add(song);
+    }
+
+    @Override
+    public Set<Song> getPaidList(long consumerId){
+        return consumerRepository.getOne(consumerId).getCollections();
+    }
 
     @Override
     @Deprecated
-    public boolean verifyPasswdByUserName(String userName, String passWord) throws UnsupportedEncodingException {
-        return PaternUtil.isUserName(userName) && consumerRepository.
-                findByNameAndPassWord(userName, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
+    public int verifyPasswdByUser(String user, String passWord) throws UnsupportedEncodingException {
+        if(!PaternUtil.isMobile(user) && !PaternUtil.isEmail(user)){
+            return 1;
+        }else if (consumerRepository.findByEmail(user) == null && consumerRepository.findByPhoneNum(user) == null) {
+            return 2;
+        }else if(PaternUtil.isMobile(user) && consumerRepository.
+                findByPhoneNumAndPassWord(user, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) == null){
+            return 3;
+        }else if(PaternUtil.isEmail(user) && consumerRepository.
+                findByEmailAndPassWord(user, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) == null){
+            return 3;
+        }else {
+            return 0;
+        }
     }
 
-    @Override
-    public boolean verifyPasswdByPhoneNum(String phoneNum, String passWord) throws UnsupportedEncodingException {
-        return PaternUtil.isMobile(phoneNum) && consumerRepository.
-                findByPhoneNumAndPassWord(phoneNum, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
-    }
+//    @Override
+//    @Deprecated
+//    public int verifyPasswdByUserName(String userName, String passWord) throws UnsupportedEncodingException {
+//        return PaternUtil.isUserName(userName) && consumerRepository.
+//                findByNameAndPassWord(userName, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
+//    }
 
-    @Override
-    public boolean verifyPasswdByEmail(String Email, String passWord) throws UnsupportedEncodingException {
-        return PaternUtil.isEmail(Email) && consumerRepository.
-                findByEmailAndPassWord(Email, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
-    }
+//    @Override
+//    public boolean verifyPasswdByPhoneNum(String phoneNum, String passWord) throws UnsupportedEncodingException {
+//        return PaternUtil.isMobile(phoneNum) && consumerRepository.
+//                findByPhoneNumAndPassWord(phoneNum, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
+//    }
+//
+//    @Override
+//    public boolean verifyPasswdByEmail(String Email, String passWord) throws UnsupportedEncodingException {
+//        return PaternUtil.isEmail(Email) && consumerRepository.
+//                findByEmailAndPassWord(Email, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) != null;
+//    }
 
     @Override
     public boolean updateConsumer(Consumer consumer) throws ConsumerException{

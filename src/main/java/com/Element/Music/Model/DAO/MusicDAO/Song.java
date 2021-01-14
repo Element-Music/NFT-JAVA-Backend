@@ -41,6 +41,9 @@ public class Song extends BaseEntity {
 
     private int liked;
 
+//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
+//    private Price price;
+
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "collections")
     private Set<Consumer> consumers;
 }

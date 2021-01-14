@@ -14,7 +14,7 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     List<Song> findAllByMusicianAndDeletedIsFalse(Musician musician);
 
-    List<Song> findAllByMusician(Musician musician);
+    List<Song> findAllBySongNameAndDeletedIsFalse(String name);
 
 //    Musician findMusicianById(long musicianId);
 }

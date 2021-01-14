@@ -54,6 +54,11 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public List<Song> getSongByName(String name) {
+        return songRepository.findAllBySongNameAndDeletedIsFalse(name);
+    }
+
+    @Override
     public List<Song> getSongsByMusician(long musicianId) {
 //        return songRepository.findAllByMusician(musicianService.getMusicianById(musicianId));
         return songRepository.findAllByMusicianAndDeletedIsFalse(musicianService.getMusicianById(musicianId));

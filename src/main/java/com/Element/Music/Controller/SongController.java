@@ -122,7 +122,7 @@ public class SongController {
 
 
     //    返回指定歌曲ID的歌曲
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/songId/detail", method = RequestMethod.GET)
     public Object songOfId(HttpServletRequest req){
         String id = req.getParameter("id");
         return songService.getSongById(Integer.parseInt(id));
@@ -141,14 +141,14 @@ public class SongController {
         String name = req.getParameter("name");
         return songService.songOfSingerName('%'+ name + '%');
     }
-
+*/
     //    返回指定歌曲名的歌曲
-    @RequestMapping(value = "/name/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/songName/detail", method = RequestMethod.GET)
     public Object songOfName(HttpServletRequest req){
         String name = req.getParameter("name").trim();
-        return songService.songOfName(name);
+        return songService.getSongByName(name);
     }
-*/
+
     //    删除歌曲
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public Object deleteSong(HttpServletRequest req){

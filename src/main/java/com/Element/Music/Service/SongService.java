@@ -14,6 +14,8 @@ public interface SongService {
 
     Song getSongById(long id);
 
+    List<Song> getSongByName(String name);
+
     List<Song> getAllSong();
 
     List<Song> getSongsByMusician(long musicianId);
