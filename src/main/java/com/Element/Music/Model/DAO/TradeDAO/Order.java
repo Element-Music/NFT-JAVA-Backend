@@ -1,4 +1,6 @@
 package com.Element.Music.Model.DAO.TradeDAO;
 
-public class Order {
+import com.Element.Music.Model.DAO.BaseEntity;
+
+public class Order extends BaseEntity {
 }

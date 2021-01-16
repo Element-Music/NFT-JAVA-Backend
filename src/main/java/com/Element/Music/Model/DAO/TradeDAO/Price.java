@@ -1,5 +1,7 @@
 package com.Element.Music.Model.DAO.TradeDAO;
 
-public class Price {
+import com.Element.Music.Model.DAO.BaseEntity;
+
+public class Price extends BaseEntity {
 
 }
