@@ -102,7 +102,7 @@ public class MusicianController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public Object deleteSinger(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return musicianService.removeById(Integer.parseInt(id));
+        return musicianService.removeById(Long.parseLong(id));
     }
 
     //    更新歌手信息
@@ -129,7 +129,7 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex.equals("male")? true : false);
+        musician.setSex(sex.equals("male") ? true : false);
         musician.setId(Long.parseLong(id));
 
         boolean res = musicianService.updateMusicianMsg(musician);
@@ -161,7 +161,7 @@ public class MusicianController {
         if (!file1.exists()) {
             file1.mkdir();
         }
-        filePath +=  System.getProperty("file.separator") + "singerPic";
+        filePath += System.getProperty("file.separator") + "singerPic";
         File file2 = new File(filePath);
         if (!file2.exists()) {
             file2.mkdir();
@@ -193,5 +193,11 @@ public class MusicianController {
         } finally {
             return jsonObject;
         }
+    }
+
+    @RequestMapping(value = "/MusicianPicture", method = RequestMethod.GET)
+    public String getMusicianPortrait(HttpServletRequest req) {
+        String id = req.getParameter("id");
+        return musicianService.getMusicianPortrait(Long.parseLong(id));
     }
 }

@@ -116,19 +116,19 @@ public class SongController {
 
     //    返回所有歌曲
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Object allSong(){
+    public Object allSong() {
         return songService.getAllSong();
     }
 
 
     //    返回指定歌曲ID的歌曲
     @RequestMapping(value = "/songId/detail", method = RequestMethod.GET)
-    public Object songOfId(HttpServletRequest req){
+    public Object songOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
         return songService.getSongById(Integer.parseInt(id));
     }
 
-//    //    返回指定歌手ID的歌曲
+    //    //    返回指定歌手ID的歌曲
 //    @RequestMapping(value = "/singer/detail", method = RequestMethod.GET)
 //    public Object songOfSingerId(HttpServletRequest req){
 //        String singerId = req.getParameter("singerId");
@@ -144,14 +144,14 @@ public class SongController {
 */
     //    返回指定歌曲名的歌曲
     @RequestMapping(value = "/songName/detail", method = RequestMethod.GET)
-    public Object songOfName(HttpServletRequest req){
+    public Object songOfName(HttpServletRequest req) {
         String name = req.getParameter("name").trim();
         return songService.getSongByName(name);
     }
 
     //    删除歌曲
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public Object deleteSong(HttpServletRequest req){
+    public Object deleteSong(HttpServletRequest req) {
         String id = req.getParameter("id");
         return songService.deleteSong(Integer.parseInt(id));
     }
@@ -289,5 +289,11 @@ public class SongController {
         String header = new String(filename.getBytes("utf-8"), "iso-8859-1");
         response.setHeader("Content-Disposition", "attachment;filename=" + header);
         FileUtils.download(filename, response);
+    }
+
+    @RequestMapping(value = "/songPic")
+    public String getSongPicture(HttpServletRequest req) {
+        String id = req.getParameter("id");
+        return songService.getSongPic(Long.parseLong(id));
     }
 }

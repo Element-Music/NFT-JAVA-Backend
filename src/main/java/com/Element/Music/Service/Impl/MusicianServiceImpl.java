@@ -51,8 +51,8 @@ public class MusicianServiceImpl implements MusicianService {
     }
 
     @Override
-    public boolean updateMusicianMsg(Musician musician) throws MusicianException{
-        if(musician == null)
+    public boolean updateMusicianMsg(Musician musician) throws MusicianException {
+        if (musician == null)
             throw new MusicianException("更改歌手接口缺失musician");
         Optional<Musician> musicianOptional = musicianRepository.findById(musician.getId());
         if (musicianOptional.get() != null || !musicianOptional.get().isDeleted()) {
@@ -104,6 +104,17 @@ public class MusicianServiceImpl implements MusicianService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String getMusicianPortrait(long id) {
+        Musician musician = musicianRepository.findById(id).get();
+        if (musician == null)
+            return "该歌手不存在";
+        String portraitPath = musician.getPortrait();
+        if (portraitPath == null || portraitPath.length() == 0)
+            return "该歌手没有头像";
+        return portraitPath;
     }
 
 

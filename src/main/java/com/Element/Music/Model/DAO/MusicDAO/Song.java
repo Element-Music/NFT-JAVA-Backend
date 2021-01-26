@@ -26,7 +26,7 @@ public class Song extends BaseEntity {
     @Column(nullable = false)
     private String songName;
 
-    private String representImagePath;
+    private String representImagePath;//变量名可能需要调整 TODO
 
     private MusicType musicType;
 

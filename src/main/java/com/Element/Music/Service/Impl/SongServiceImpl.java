@@ -65,8 +65,8 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public boolean updateSong(Song song) throws SongException{
-        if(song == null)
+    public boolean updateSong(Song song) throws SongException {
+        if (song == null)
             throw new SongException("更改歌曲接口缺失song");
         Optional<Song> songOptional = songRepository.findById(song.getId());
         if (songOptional.get() != null || !songOptional.get().isDeleted()) {
@@ -120,5 +120,16 @@ public class SongServiceImpl implements SongService {
     public Musician getMusicianById(long id) {
         Musician musician = musicianService.getMusicianById(id);
         return musician;
+    }
+
+    @Override
+    public String getSongPic(long id) {
+        Song song = songRepository.findById(id).get();
+        if (song == null)
+            return "这首歌不存在，发错id啦同学";
+        String songPicPath = song.getRepresentImagePath();
+        if (songPicPath == null || songPicPath.length() == 0)
+            return "抱歉同学，这首歌的图片可能有某个傻瓜忘了存";
+        return songPicPath;
     }
 }

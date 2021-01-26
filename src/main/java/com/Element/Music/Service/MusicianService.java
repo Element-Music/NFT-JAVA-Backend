@@ -21,4 +21,6 @@ public interface MusicianService {
     List<Musician> getAllMusician();
 
     boolean removeById(long id);
+
+    String getMusicianPortrait(long id);
 }

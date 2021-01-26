@@ -27,4 +27,6 @@ public interface SongService {
     boolean updateSongUrl(Song song) throws SongException;
 
     Musician getMusicianById(long id);
+
+    String getSongPic(long id);
 }
