@@ -8,23 +8,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
-@Entity(name = "Order")
+@Entity(name = "ConsumerOrder")
 @Data
 @Builder
-@Table(name = "Order")
+@Table(name = "consumer_order")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order extends BaseEntity {
+public class ConsumerOrder extends BaseEntity {
 
-    @OneToOne
-    private Song song;
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<Song> song;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Consumer consumer;
 
     private Long orderCode;

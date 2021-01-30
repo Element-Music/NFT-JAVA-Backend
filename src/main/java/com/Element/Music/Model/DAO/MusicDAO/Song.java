@@ -2,6 +2,7 @@ package com.Element.Music.Model.DAO.MusicDAO;
 
 import com.Element.Music.Emun.MusicType;
 import com.Element.Music.Model.DAO.BaseEntity;
+import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import lombok.AllArgsConstructor;
@@ -15,13 +16,12 @@ import java.util.Set;
 @Entity(name = "Song")
 @Data
 @Builder
-@Table(name = "Song")
+@Table(name = "song")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Song extends BaseEntity {
 
-    @Column(nullable = false)
-    private String musicianName;
+    private String musicianName;//这个字段可以被取消掉
 
     @Column(nullable = false)
     private String songName;
@@ -41,8 +41,8 @@ public class Song extends BaseEntity {
 
     private int liked;
 
-//    @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
-//    private Price price;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
+    private Price price;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "collections")
     private Set<Consumer> consumers;

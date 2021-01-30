@@ -24,18 +24,11 @@ public class Musician extends User implements Serializable {
 
     private static final long serialVersionUID = 7659253546867155512L;
 
-//    @Id
-//    @GeneratedValue
-//    private long musicianId;
-
     @Column(nullable = false)
     private MusicType musicType;
 
     @Column(nullable = false)
     private String name;
-
-//    @Column(nullable = false)
-//    private String sex;
 
     @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Song> songs;

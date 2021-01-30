@@ -1,6 +1,7 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Model.DAO.MusicDAO.Song;
+import com.Element.Music.Model.DAO.TradeDAO.ConsumerOrder;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,5 +26,8 @@ public class Consumer extends User implements Serializable {
 
     @NonNull
     private String passWord;
+
+    @OneToMany(mappedBy = "consumer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ConsumerOrder> orders;
 
 }

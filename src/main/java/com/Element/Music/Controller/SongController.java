@@ -291,7 +291,7 @@ public class SongController {
         FileUtils.download(filename, response);
     }
 
-    @RequestMapping(value = "/songPic")
+    @RequestMapping(value = "/songPicture")
     public String getSongPicture(HttpServletRequest req) {
         String id = req.getParameter("id");
         return songService.getSongPic(Long.parseLong(id));

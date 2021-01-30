@@ -3,8 +3,10 @@ package com.Element.Music;
 import com.Element.Music.Emun.MusicType;
 import com.Element.Music.Emun.Profession;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
+import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
+import com.Element.Music.Service.SongService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +21,14 @@ class BackendApplicationTests {
     @Autowired
     private MusicianService musicianService;
 
+    @Autowired
+    private SongService songService;
+
     @Test
     void contextLoads() {
         Song song = Song.builder().description("description")
                 .musicType(MusicType.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
-                .url("http://...com").build();
+                .url("http://...com").musicianName("name").build();
         Set<Song> songs = new HashSet<>();
         songs.add(song);
 
@@ -39,4 +44,9 @@ class BackendApplicationTests {
         musicianService.addMusician(musician);
     }
 
+    @Test
+    void testGetPrice() {
+        Price price = songService.getSongById(4).getPrice();
+        System.out.println("原价是" + price.getOriginalPrice());
+    }
 }
