@@ -32,8 +32,8 @@ class BackendApplicationTests {
         Set<Song> songs = new HashSet<>();
         songs.add(song);
 
-        Musician musician = Musician.builder().musicType(MusicType.JAZZ).description("这是一个歌手").profession(Profession.DOCTOR)
-                .representativeWork("lujing").representImagePath("imagelujing").songs(songs).weibo("weibo").build();
+        Musician musician = Musician.builder().musicType(MusicType.JAZZ).description("这是一个歌手")
+                .representativeWork("lujing").songs(songs).weibo("weibo").build();
         musician.setName("name");
         musician.setBirth(new Date(1995, 10, 29));
         musician.setEmail("740612415@qq.com");

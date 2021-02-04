@@ -50,14 +50,13 @@ public class MusicianController {
         JSONObject jsonObject = new JSONObject();
         String name = req.getParameter("name").trim();
         String sex = req.getParameter("sex").trim();
-        String pic = req.getParameter("pic").trim();
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
         String description = req.getParameter("description").trim();
         String portrait = req.getParameter("portrait").trim();
         String musicType = req.getParameter("musicType").trim();
 
-        Musician musician = Musician.builder().representImagePath(pic).musicType(MusicType.valueOf(musicType))
+        Musician musician = Musician.builder().musicType(MusicType.valueOf(musicType))
                 .description(description).name(name).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date myBirth = new Date();
@@ -118,7 +117,7 @@ public class MusicianController {
         String location = req.getParameter("location").trim();
         String description = req.getParameter("description").trim();
 
-        Musician musician = Musician.builder().representImagePath(pic).description(description).build();
+        Musician musician = Musician.builder().description(description).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date myBirth = new Date();
         try {
@@ -136,12 +135,11 @@ public class MusicianController {
         if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "修改成功");
-            return jsonObject;
         } else {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "修改失败");
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    更新歌手头像
@@ -199,5 +197,11 @@ public class MusicianController {
     public String getMusicianPortrait(HttpServletRequest req) {
         String id = req.getParameter("id");
         return musicianService.getMusicianPortrait(Long.parseLong(id));
+    }
+
+    @RequestMapping(value = "/musicianById", method = RequestMethod.GET)
+    public Object getMusicianById(HttpServletRequest req) {
+        long id = Long.parseLong(req.getParameter("musicianId"));
+        return musicianService.getMusicianById(id);
     }
 }

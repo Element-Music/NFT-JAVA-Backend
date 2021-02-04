@@ -37,8 +37,8 @@ public class SongController {
     @Value("${song.path}")
     private String songPath;
 
-    @Value("${user.path}")
-    private String userPath;
+    //@Value("${user.path}")
+    private String userPath="C:\\Users\\74061\\Desktop\\";
 
     public SongController(SongService songService) {
         this.songService = songService;
@@ -99,12 +99,11 @@ public class SongController {
                 jsonObject.put("code", 1);
                 jsonObject.put("urlPath", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
-                return jsonObject;
             } else {
                 jsonObject.put("code", 0);
                 jsonObject.put("msg", "上传失败");
-                return jsonObject;
             }
+            return jsonObject;
         } catch (Exception e) {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "上传失败" + e.getMessage());

@@ -3,6 +3,7 @@ package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Emun.MusicType;
 import com.Element.Music.Emun.Profession;
+import com.Element.Music.Model.DAO.MusicDAO.Album;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,15 +34,14 @@ public class Musician extends User implements Serializable {
     @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Song> songs;
 
+    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private Set<Album> albums;
+
     private String weibo;
 
     private String description;
 
-    private Profession profession;
-
     private String representativeWork;
-
-    private String representImagePath;
 
     private int liked;
 
