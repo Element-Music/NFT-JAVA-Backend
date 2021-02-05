@@ -1,6 +1,7 @@
 package com.Element.Music.Controller;
 
-import com.Element.Music.Emun.MusicType;
+import com.Element.Music.Emun.Genre;
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Exception.MusicianException;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
@@ -56,7 +57,7 @@ public class MusicianController {
         String portrait = req.getParameter("portrait").trim();
         String musicType = req.getParameter("musicType").trim();
 
-        Musician musician = Musician.builder().musicType(MusicType.valueOf(musicType))
+        Musician musician = Musician.builder().genre(Genre.valueOf(musicType))
                 .description(description).name(name).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date myBirth = new Date();
@@ -68,7 +69,7 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex.equals("male") ? true : false);
+        musician.setSex(Sex.valueOf(sex));
         musician.setPortrait(portrait);
         Musician res = musicianService.addMusician(musician);
 
@@ -128,7 +129,7 @@ public class MusicianController {
         musician.setName(name);
         musician.setBirth(myBirth);
         musician.setLocation(location);
-        musician.setSex(sex.equals("male") ? true : false);
+        musician.setSex(Sex.valueOf(sex));
         musician.setId(Long.parseLong(id));
 
         boolean res = musicianService.updateMusicianMsg(musician);

@@ -18,6 +18,8 @@ public class Consumer extends User implements Serializable {
 
     private static final long serialVersionUID = -2214230518390003400L;
 
+    private String nickName;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Set<Song> collections;
 

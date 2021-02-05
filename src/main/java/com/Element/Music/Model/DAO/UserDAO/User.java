@@ -1,5 +1,6 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class User extends BaseEntity {
 
     protected String portrait;
 
-    protected boolean sex;
+    protected Sex sex;
 
     protected String phoneNum;
 

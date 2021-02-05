@@ -2,6 +2,7 @@ package com.Element.Music.Controller;
 
 //import com.Element.Music.Emun.Sex;
 
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
@@ -76,7 +77,7 @@ public class ConsumerController {
         }
         consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(sex.equals("male") ? true : false);//sex为boolean类型，true代表男性，false代表女性
+        consumer.setSex(Sex.valueOf(sex));
         if (phoneNum == "") {
             consumer.setPhoneNum(null);
         } else {
@@ -284,7 +285,7 @@ public class ConsumerController {
         consumer.setId(Long.parseLong(id));
         consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(sex.equals("male") ? true : false);
+        consumer.setSex(Sex.valueOf(sex));
         consumer.setPhoneNum(phoneNum);
         consumer.setEmail(email);
         consumer.setBirth(myBirth);

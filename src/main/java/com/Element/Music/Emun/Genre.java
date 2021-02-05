@@ -1,6 +1,6 @@
 package com.Element.Music.Emun;
 
-public enum MusicType {
+public enum Genre {
 
     POP(0, "流行"),
     ROCK(1, "摇滚"),
@@ -36,7 +36,7 @@ public enum MusicType {
     private int code;
     private String name;
 
-    private MusicType(int code, String name) {
+    private Genre(int code, String name) {
         this.code = code;
         this.name = name;
     }

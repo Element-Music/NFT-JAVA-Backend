@@ -1,7 +1,6 @@
 package com.Element.Music;
 
-import com.Element.Music.Emun.MusicType;
-import com.Element.Music.Emun.Profession;
+import com.Element.Music.Emun.Genre;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
@@ -27,12 +26,12 @@ class BackendApplicationTests {
     @Test
     void contextLoads() {
         Song song = Song.builder().description("description")
-                .musicType(MusicType.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
+                .genre(Genre.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
                 .url("http://...com").musicianName("name").build();
         Set<Song> songs = new HashSet<>();
         songs.add(song);
 
-        Musician musician = Musician.builder().musicType(MusicType.JAZZ).description("这是一个歌手")
+        Musician musician = Musician.builder().genre(Genre.JAZZ).description("这是一个歌手")
                 .representativeWork("lujing").songs(songs).weibo("weibo").build();
         musician.setName("name");
         musician.setBirth(new Date(1995, 10, 29));

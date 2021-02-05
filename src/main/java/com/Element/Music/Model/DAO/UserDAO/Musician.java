@@ -1,8 +1,7 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
 
-import com.Element.Music.Emun.MusicType;
-import com.Element.Music.Emun.Profession;
+import com.Element.Music.Emun.Genre;
 import com.Element.Music.Model.DAO.MusicDAO.Album;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ public class Musician extends User implements Serializable {
     private static final long serialVersionUID = 7659253546867155512L;
 
     @Column(nullable = false)
-    private MusicType musicType;
+    private Genre genre;
 
     @Column(nullable = false)
     private String name;

@@ -1,6 +1,6 @@
 package com.Element.Music.Model.DAO.MusicDAO;
 
-import com.Element.Music.Emun.MusicType;
+import com.Element.Music.Emun.Genre;
 import com.Element.Music.Model.DAO.BaseEntity;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity(name = "Song")
@@ -21,6 +22,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class Song extends BaseEntity {
 
+    @ManyToOne()
+    private Album album;
+
+    private Date releaseDate;
+
     private String musicianName;//这个字段可以被取消掉
 
     @Column(nullable = false)
@@ -28,7 +34,7 @@ public class Song extends BaseEntity {
 
     private String representImagePath;//变量名可能需要调整 TODO
 
-    private MusicType musicType;
+    private Genre genre;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Musician musician;
@@ -36,6 +42,8 @@ public class Song extends BaseEntity {
     private String url;
 
     private String lyric;
+
+    private String info;
 
     private String description;
 
