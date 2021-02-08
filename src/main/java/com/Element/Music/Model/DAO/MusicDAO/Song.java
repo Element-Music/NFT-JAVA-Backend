@@ -27,12 +27,10 @@ public class Song extends BaseEntity {
 
     private Date releaseDate;
 
-    private String musicianName;//这个字段可以被取消掉
-
     @Column(nullable = false)
     private String songName;
 
-    private String representImagePath;//变量名可能需要调整 TODO
+    private String representImagePath;
 
     private Genre genre;
 
