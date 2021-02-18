@@ -125,16 +125,18 @@ public class ConsumerController {
             jsonObject.put("msg", "登录成功");
             //jsonObject.put("userMsg", consumerService.loginStatus(username));
             session.setAttribute("username", username);
+            String sessionId = session.getId();
+            jsonObject.put("sessionId", sessionId);
             return jsonObject;
-        } else if (res == 1){
+        } else if (res == 1) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "用户名格式错误");
             return jsonObject;
-        } else if (res == 2){
+        } else if (res == 2) {
             jsonObject.put("code", 2);
             jsonObject.put("msg", "该账户未注册");
             return jsonObject;
-        } else{
+        } else {
             jsonObject.put("code", 3);
             jsonObject.put("msg", "用户名和密码不匹配");
             return jsonObject;
