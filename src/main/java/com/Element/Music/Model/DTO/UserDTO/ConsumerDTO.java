@@ -5,9 +5,6 @@ import com.Element.Music.Model.DTO.MusicDTO.SongDTO;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Data

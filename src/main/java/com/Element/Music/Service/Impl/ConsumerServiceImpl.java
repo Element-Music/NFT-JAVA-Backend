@@ -161,7 +161,7 @@ public class ConsumerServiceImpl implements ConsumerService {
             consumer1.setId(consumer.getId());
             consumer1.setName(consumer.getName());
             consumer1.setPassWord(consumer.getPassWord());
-            consumer1.setSex(consumer.isSex());
+            consumer1.setSex(consumer.getSex());
             consumer1.setPhoneNum(consumer.getPhoneNum());
             consumer1.setEmail(consumer.getEmail());
             consumer1.setBirth(consumer.getBirth());

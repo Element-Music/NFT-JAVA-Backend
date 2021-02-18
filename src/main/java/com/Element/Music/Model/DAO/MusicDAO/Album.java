@@ -11,18 +11,18 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
-@Entity(name = "Song")
+@Entity(name = "Album")
 @Data
 @Builder
-@Table(name = "song")
+@Table(name = "album")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Album extends BaseEntity {
 
-    @OneToMany()
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "album")
     private Set<Song> songs;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Musician musician;
 
     private Date releaseDate;

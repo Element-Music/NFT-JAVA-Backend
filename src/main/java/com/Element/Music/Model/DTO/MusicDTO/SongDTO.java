@@ -20,7 +20,7 @@ import java.util.Set;
 @Builder
 public class SongDTO {
 
-    private long albumId;
+    private AlbumDTO albumDTO;
 
     private Date releaseDate;
 

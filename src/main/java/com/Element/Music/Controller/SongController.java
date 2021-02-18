@@ -69,7 +69,7 @@ public class SongController {
     public Object addSong(HttpServletRequest req, @RequestParam("file") MultipartFile mpfile) {
         JSONObject jsonObject = new JSONObject();
         String musicianId = req.getParameter("musicianId").trim();
-        String musicianName = req.getParameter("musicianName").trim();
+        //String musicianName = req.getParameter("musicianName").trim();
         String songName = req.getParameter("songName").trim();
         String description = req.getParameter("description").trim();
         String pic = req.getParameter("pic").trim();
@@ -92,7 +92,7 @@ public class SongController {
         pic = "/songPic/" + pic;
         try {
             mpfile.transferTo(dest);
-            Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).musicianName(musicianName)
+            Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description)
                     .songName(songName).lyric(lyric).url(storeUrlPath).representImagePath(pic).build();
             Song res = songService.addSong(song);
             if (res != null) {
@@ -162,12 +162,12 @@ public class SongController {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
         String musicianId = req.getParameter("musicianId").trim();
-        String musicianName = req.getParameter("musicianName").trim();
+        //String musicianName = req.getParameter("musicianName").trim();
         String songName = req.getParameter("songName").trim();
         String description = req.getParameter("description").trim();
         String lyric = req.getParameter("lyric").trim();
 
-        Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description).musicianName(musicianName)
+        Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description)
                 .songName(songName).lyric(lyric).build();
         song.setId(Long.parseLong(id));
         song.setLyric(lyric);
@@ -176,12 +176,11 @@ public class SongController {
         if (res) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "修改成功");
-            return jsonObject;
         } else {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "修改失败");
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    更新歌曲图片

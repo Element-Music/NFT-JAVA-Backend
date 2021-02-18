@@ -59,7 +59,7 @@ public class MusicianServiceImpl implements MusicianService {
             Musician musician1 = musicianOptional.orElse(null);
             musician1.setId(musician.getId());
             musician1.setName(musician.getName());
-            musician1.setSex(musician.isSex());
+            musician1.setSex(musician.getSex());
             musician1.setPortrait(musician.getPortrait());
             musician1.setBirth(musician.getBirth());
             musician1.setLocation(musician.getLocation());

@@ -113,7 +113,7 @@ public class MusicianController {
         String id = req.getParameter("id").trim();
         String name = req.getParameter("name").trim();
         String sex = req.getParameter("sex").trim();
-        String pic = req.getParameter("pic").trim();
+        //String pic = req.getParameter("pic").trim();
         String birth = req.getParameter("birth").trim();
         String location = req.getParameter("location").trim();
         String description = req.getParameter("description").trim();
@@ -200,7 +200,7 @@ public class MusicianController {
         return musicianService.getMusicianPortrait(Long.parseLong(id));
     }
 
-    @RequestMapping(value = "/musicianById", method = RequestMethod.GET)
+    @RequestMapping(value = "/id/detail", method = RequestMethod.GET)
     public Object getMusicianById(HttpServletRequest req) {
         long id = Long.parseLong(req.getParameter("musicianId"));
         return musicianService.getMusicianById(id);

@@ -73,7 +73,7 @@ public class SongServiceImpl implements SongService {
             Song song1 = songOptional.orElse(null);
             song1.setId(song.getId());
             song1.setSongName(song.getSongName());
-            song1.setMusicianName(song.getMusicianName());
+            song1.setMusician(song.getMusician());
             song1.setDescription(song.getDescription());
             song1.setLyric(song.getLyric());
             songRepository.save(song1);

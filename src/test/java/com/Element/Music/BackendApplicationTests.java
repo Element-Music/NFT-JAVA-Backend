@@ -1,6 +1,7 @@
 package com.Element.Music;
 
 import com.Element.Music.Emun.Genre;
+import com.Element.Music.Emun.Sex;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
@@ -27,7 +28,7 @@ class BackendApplicationTests {
     void contextLoads() {
         Song song = Song.builder().description("description")
                 .genre(Genre.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
-                .url("http://...com").musicianName("name").build();
+                .url("http://...com").build();
         Set<Song> songs = new HashSet<>();
         songs.add(song);
 
@@ -37,7 +38,7 @@ class BackendApplicationTests {
         musician.setBirth(new Date(1995, 10, 29));
         musician.setEmail("740612415@qq.com");
         musician.setLocation("China");
-        musician.setSex(false);
+        musician.setSex(Sex.valueOf("MALE"));
         musician.setPhoneNum("13151081251");
         musician.setPortrait("imagePath");
         musicianService.addMusician(musician);

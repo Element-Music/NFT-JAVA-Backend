@@ -22,7 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Song extends BaseEntity {
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private Album album;
 
     private Date releaseDate;
