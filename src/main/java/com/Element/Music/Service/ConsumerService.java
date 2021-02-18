@@ -29,9 +29,6 @@ public interface ConsumerService {
 
     int verifyPasswdByUser(String user, String passWord) throws UnsupportedEncodingException;
 
-//    @Deprecated
-//    boolean verifyPasswdByPhoneNum(String phoneNum, String passWord) throws UnsupportedEncodingException;
-
     boolean updateConsumer(Consumer consumer) throws ConsumerException;
 
     boolean updateUserPicture(Consumer consumer) throws ConsumerException;
