@@ -55,12 +55,8 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
         String password = req.getParameter("password").trim();
-        String sex = req.getParameter("sex").trim();
         String phoneNum = req.getParameter("phoneNum").trim();
         String email = req.getParameter("email").trim();
-        String birth = req.getParameter("birth").trim();
-        String location = req.getParameter("location").trim();
-        String portrait = req.getParameter("portrait").trim();
 
         if (username.equals("") || username == null) {
             jsonObject.put("code", 0);
@@ -68,16 +64,9 @@ public class ConsumerController {
             return jsonObject;
         }
         Consumer consumer = new Consumer();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myBirth = new Date();
-        try {
-            myBirth = dateFormat.parse(birth);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         consumer.setName(username);
         consumer.setPassWord(password);
-        consumer.setSex(Sex.valueOf(sex));
         if (phoneNum == "") {
             consumer.setPhoneNum(null);
         } else {
@@ -89,24 +78,19 @@ public class ConsumerController {
         } else {
             consumer.setEmail(email);
         }
-        consumer.setBirth(myBirth);
-        consumer.setLocation(location);
-        consumer.setPortrait(portrait);
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
-
         Consumer res = null;
         res = consumerService.addConsumer(consumer);
 
         if (res != null) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "注册成功");
-            return jsonObject;
         } else {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "注册失败,该用户已存在");
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    判断是否登录成功
