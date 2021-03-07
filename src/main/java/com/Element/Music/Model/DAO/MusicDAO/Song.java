@@ -5,12 +5,14 @@ import com.Element.Music.Model.DAO.BaseEntity;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,7 +22,10 @@ import java.util.Set;
 @Table(name = "song")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Song extends BaseEntity {
+@JsonIgnoreProperties(value = {"musician"})
+public class Song extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = -63244234985364298L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Album album;
@@ -34,7 +39,7 @@ public class Song extends BaseEntity {
 
     private Genre genre;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Musician musician;
 
     private String url;
@@ -50,6 +55,6 @@ public class Song extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
     private Price price;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "collections")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "collections")
     private Set<Consumer> consumers;
 }

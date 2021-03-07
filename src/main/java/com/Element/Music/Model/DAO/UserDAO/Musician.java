@@ -4,6 +4,7 @@ package com.Element.Music.Model.DAO.UserDAO;
 import com.Element.Music.Emun.Genre;
 import com.Element.Music.Model.DAO.MusicDAO.Album;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,10 +31,11 @@ public class Musician extends User implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "musician")
     private Set<Song> songs;
 
-    @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Album> albums;
 
     private String weibo;

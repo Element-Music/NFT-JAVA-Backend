@@ -23,7 +23,7 @@ public class Consumer extends User implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Set<Song> collections;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Song> mySongs;
 
     @NonNull

@@ -37,8 +37,8 @@ public class SongController {
     @Value("${song.path}")
     private String songPath;
 
-    //@Value("${user.path}")
-    private String userPath="C:\\Users\\74061\\Desktop\\";
+    @Value("${user.path}")
+    private String userPath;
 
     public SongController(SongService songService) {
         this.songService = songService;
@@ -294,4 +294,5 @@ public class SongController {
         String id = req.getParameter("id");
         return songService.getSongPic(Long.parseLong(id));
     }
+
 }
