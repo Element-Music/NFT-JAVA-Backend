@@ -59,7 +59,7 @@ public class PriceController {
         return jsonObject;
     }
 
-    @RequestMapping(value = "/getPrice", method = RequestMethod.GET)
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
     public Object BalanceOfUserId(HttpServletRequest req) {
         String id = req.getParameter("id");
         return priceService.getDisplayPriceById(Long.parseLong(id));

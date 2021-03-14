@@ -52,7 +52,7 @@ public class OrderController {
 
     }
 
-    @RequestMapping(value = "/getOrder", method = RequestMethod.GET)
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
     public Object orderOfConsumerId(HttpServletRequest req) {
         String consumerId = req.getParameter("consumerId");
         return orderService.getOrderByConsumerId(Long.parseLong(consumerId));

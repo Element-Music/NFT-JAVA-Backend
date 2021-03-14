@@ -74,29 +74,4 @@ public class PurseController {
     }
 
 
-
-//    @ResponseBody
-//    @RequestMapping(value = "/add", method = RequestMethod.POST)
-//    public Object initializeBalance(Consumer consumer)  {
-//        JSONObject jsonObject = new JSONObject();
-//        Double initialBalance = 100.00;
-//        Purse purse = new Purse();
-//        purse.setConsumer(consumer);
-//        purse.setBalance(initialBalance);
-//        System.out.println("purse");
-//        System.out.println(purse);
-//        System.out.println("purseService");
-//        System.out.println(purseService);
-//        Purse initializePurseRes = purseService.initializePurse(purse);
-//
-//        if (initializePurseRes != null) {
-//            jsonObject.put("code", 1);
-//            jsonObject.put("msg", "初始化钱包成功");
-//        } else {
-//            jsonObject.put("code", 0);
-//            jsonObject.put("msg", "初始化钱包失败");
-//        }
-//        return jsonObject;
-//    }
-
 } 

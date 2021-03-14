@@ -24,7 +24,9 @@ public class PlayList extends BaseEntity {
 
     private String ListName;
 
-    @ManyToMany
+    private String representImagePath;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Song> songs;
 
     private String description;

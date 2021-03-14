@@ -32,7 +32,7 @@ public class Consumer extends User implements Serializable {
     @NonNull
     private String passWord;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Song> playList;
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<Song> playList;
 
 }
