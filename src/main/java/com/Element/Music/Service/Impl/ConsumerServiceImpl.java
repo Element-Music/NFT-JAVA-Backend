@@ -10,6 +10,7 @@ import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.PaternUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
 import java.util.*;
 
 import java.io.UnsupportedEncodingException;
@@ -76,7 +77,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                 throw new ConsumerException("phoneNumber is illegal");
             } else if (consumer.getEmail() == "" && !PaternUtil.isEmail(consumer.getEmail())) {
                 throw new ConsumerException("email is illegal");
-            }else {
+            } else {
                 throw new ConsumerException("userName is illegal");
             }
         }
@@ -87,21 +88,25 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public void addToCollection(long consumerId, long songId) {
-//        Song song = songService.getSongById(songId);
-//        Optional<Consumer> consumerList = consumerRepository.findById(consumerId);
-//        Consumer consumer = consumerList.get();
-//        Set<Song> likes = consumer.getCollections();
-//        likes.add(song);
-//        consumer.setCollections(likes);
-        consumerRepository.getOne(consumerId).getCollections().add(songService.getSongById(songId));
+        Song song = songService.getSongById(songId);
+        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+        Consumer consumer = optionalConsumer.get();
+        Set<Song> likes = consumer.getCollections();
+        likes.add(song);
+        consumer.setCollections(likes);
+        consumerRepository.save(consumer);
     }
 
     @Override
-    public Set<Song> getCollection(long consumerId){
-//        Optional<Consumer> consumerList = consumerRepository.findById(consumerId);
-//        Consumer consumer = consumerList.get();
-//        return consumer.getCollections();
-        return consumerRepository.getOne(consumerId).getCollections();
+    public Set<Song> getCollection(long consumerId) {
+//        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+        Consumer consumer = getConsumerByID(consumerId);
+        return consumer.getCollections();
+    }
+
+    @Override
+    public Consumer getConsumerByID(long id) {
+        return consumerRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -110,24 +115,24 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    public Set<Song> getPaidList(long consumerId){
+    public Set<Song> getPaidList(long consumerId) {
         return consumerRepository.getOne(consumerId).getCollections();
     }
 
     @Override
     @Deprecated
     public int verifyPasswdByUser(String user, String passWord) throws UnsupportedEncodingException {
-        if(!PaternUtil.isMobile(user) && !PaternUtil.isEmail(user)){
+        if (!PaternUtil.isMobile(user) && !PaternUtil.isEmail(user)) {
             return 1;
-        }else if (consumerRepository.findByEmail(user) == null && consumerRepository.findByPhoneNum(user) == null) {
+        } else if (consumerRepository.findByEmail(user) == null && consumerRepository.findByPhoneNum(user) == null) {
             return 2;
-        }else if(PaternUtil.isMobile(user) && consumerRepository.
-                findByPhoneNumAndPassWord(user, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) == null){
+        } else if (PaternUtil.isMobile(user) && consumerRepository.
+                findByPhoneNumAndPassWord(user, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) == null) {
             return 3;
-        }else if(PaternUtil.isEmail(user) && consumerRepository.
-                findByEmailAndPassWord(user, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) == null){
+        } else if (PaternUtil.isEmail(user) && consumerRepository.
+                findByEmailAndPassWord(user, DigestUtils.md5DigestAsHex(passWord.getBytes())).orElse(null) == null) {
             return 3;
-        }else {
+        } else {
             return 0;
         }
     }
@@ -152,8 +157,8 @@ public class ConsumerServiceImpl implements ConsumerService {
 //    }
 
     @Override
-    public boolean updateConsumer(Consumer consumer) throws ConsumerException{
-        if(consumer == null)
+    public boolean updateConsumer(Consumer consumer) throws ConsumerException {
+        if (consumer == null)
             throw new ConsumerException("更改用户接口缺失consumer");
         Optional<Consumer> consumerOptional = consumerRepository.findById(consumer.getId());
         if (consumerOptional.get() != null || !consumerOptional.get().isDeleted()) {
@@ -187,10 +192,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         return true;
     }
 
-    @Override
-    public Consumer getConsumerByID(long id) {
-        return consumerRepository.findById(id).orElse(null);
-    }
+
 
     @Override
     public List<Consumer> getAllUser() {

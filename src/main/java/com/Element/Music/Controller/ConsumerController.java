@@ -127,15 +127,27 @@ public class ConsumerController {
         }
     }
 
-    @RequestMapping(value = "/collection", method = RequestMethod.GET)
+    @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
     public Object collect(HttpServletRequest req) {
-        JSONObject jsonObject = new JSONObject();
         String songId = req.getParameter("songId");
         String consumerId = req.getParameter("consumerId");
         consumerService.addToCollection(Long.parseLong(consumerId), Long.parseLong(songId));
         return consumerService.getCollection(Long.parseLong(consumerId));
     }
 
+    @RequestMapping(value = "/getCollection", method = RequestMethod.GET)
+    public Object getCollection(HttpServletRequest req) {
+        String consumerId = req.getParameter("id");
+        return consumerService.getCollection(Long.parseLong(consumerId));
+    }
+
+    //    返回指定ID的用户
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public Object userOfId(HttpServletRequest req) {
+        String id = req.getParameter("id");
+        Consumer consumer = consumerService.getConsumerByID(Long.parseLong(id));
+        return consumer;
+    }
 
 //    @ResponseBody
 //    @Deprecated
@@ -224,13 +236,6 @@ public class ConsumerController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Object allSinger() {
         return consumerService.getAllUser();
-    }
-
-    //    返回指定ID的用户
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public Object userOfId(HttpServletRequest req) {
-        String id = req.getParameter("id");
-        return consumerService.getConsumerByID(Long.parseLong(id));
     }
 
     //    删除用户
