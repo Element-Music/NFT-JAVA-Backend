@@ -54,6 +54,6 @@ public class Song extends BaseEntity implements Serializable {
 
     private Double price;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "collections")
-    private Set<Consumer> consumers;
+    /*@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "collections")
+    private Set<Consumer> consumers;*/
 }
