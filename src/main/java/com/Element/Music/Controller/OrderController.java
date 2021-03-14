@@ -1,6 +1,7 @@
 package com.Element.Music.Controller;
 
 
+import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.TradeDAO.ConsumerOrder;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Service.OrderService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -59,6 +61,12 @@ public class OrderController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Object allOrder(HttpServletRequest req) {
         return orderService.getAllOrder();
+    }
+
+    @RequestMapping(value = "/getOrderSong", method = RequestMethod.GET)
+    public Object orderSongOfConsumerId(HttpServletRequest req) {
+        String consumerId = req.getParameter("consumerId");
+        return orderService.getSongIdByConsumerId(Long.parseLong(consumerId));
     }
 
 }

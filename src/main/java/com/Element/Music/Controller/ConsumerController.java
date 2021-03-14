@@ -138,12 +138,17 @@ public class ConsumerController {
         }
     }
 
-    @RequestMapping(value = "/collection", method = RequestMethod.GET)
+    @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
     public Object collect(HttpServletRequest req) {
-        JSONObject jsonObject = new JSONObject();
         String songId = req.getParameter("songId");
         String consumerId = req.getParameter("consumerId");
         consumerService.addToCollection(Long.parseLong(consumerId), Long.parseLong(songId));
+        return consumerService.getCollection(Long.parseLong(consumerId));
+    }
+
+    @RequestMapping(value = "/getCollection", method = RequestMethod.GET)
+    public Object getCollection(HttpServletRequest req) {
+        String consumerId = req.getParameter("id");
         return consumerService.getCollection(Long.parseLong(consumerId));
     }
 

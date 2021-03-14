@@ -1,12 +1,13 @@
 package com.Element.Music.Service.Impl;
 
-import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.TradeRepository.OrderRepository;
 import com.Element.Music.Model.DAO.TradeDAO.*;
+import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.*;
 import org.springframework.stereotype.Service;
 import com.Element.Music.IdProducer.OrderId;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,14 +19,18 @@ public class OrderServiceImpl implements OrderService {
 
     private final PurseService purseService;
 
+    private final SongService songService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, PriceService priceService, PurseService purseService) throws NoSuchAlgorithmException {
+
+    public OrderServiceImpl(OrderRepository orderRepository, PriceService priceService, PurseService purseService, SongService songService) throws NoSuchAlgorithmException {
 
         this.orderRepository = orderRepository;
 
         this.priceService = priceService;
 
         this.purseService = purseService;
+
+        this.songService = songService;
     }
 
     @Override
@@ -72,6 +77,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<ConsumerOrder> getOrderByConsumerId(Long consumerId){
         return orderRepository.findAllByConsumerIdAndDeletedIsFalse(consumerId);
+    }
+
+    public List<Song> getSongIdByConsumerId(Long consumerId){
+        List<ConsumerOrder> orderRes = orderRepository.findAllByConsumerIdAndDeletedIsFalse(consumerId);
+        List<Song> returnSong = new ArrayList<>();
+
+        for(ConsumerOrder consumerOrder: orderRes){
+            returnSong.add(songService.getSongById(consumerOrder.getSongId()));
+        }
+
+        return returnSong;
     }
 
     public List<ConsumerOrder> getAllOrder(){

@@ -97,22 +97,22 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public void addToCollection(long consumerId, long songId) {
-//        Song song = songService.getSongById(songId);
-//        Optional<Consumer> consumerList = consumerRepository.findById(consumerId);
-//        Consumer consumer = consumerList.get();
-//        Set<Song> likes = consumer.getCollections();
-//        likes.add(song);
-//        consumer.setCollections(likes);
-        consumerRepository.getOne(consumerId).getCollections().add(songService.getSongById(songId));
+        Song song = songService.getSongById(songId);
+        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+        Consumer consumer = optionalConsumer.get();
+        Set<Song> likes = consumer.getCollections();
+        likes.add(song);
+        consumer.setCollections(likes);
+        consumerRepository.save(consumer);
     }
 
     @Override
-    public Set<Song> getCollection(long consumerId){
-//        Optional<Consumer> consumerList = consumerRepository.findById(consumerId);
-//        Consumer consumer = consumerList.get();
-//        return consumer.getCollections();
-        return consumerRepository.getOne(consumerId).getCollections();
+    public Set<Song> getCollection(long consumerId) {
+//        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+        Consumer consumer = getConsumerByID(consumerId);
+        return consumer.getCollections();
     }
+
 
     @Override
     public void addToPaidList(long consumerId, Song song) {

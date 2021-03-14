@@ -20,7 +20,7 @@ public class Consumer extends User implements Serializable {
 
     private String nickName;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Song> collections;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
