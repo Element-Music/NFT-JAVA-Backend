@@ -18,8 +18,9 @@ import java.util.Set;
 @AllArgsConstructor
 public class PlayList extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Consumer createdBy;
+    /*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(nullable = true)
+    private Consumer createdBy;*/
 
     private String ListName;
 

@@ -295,4 +295,10 @@ public class SongController {
         return songService.getSongPic(Long.parseLong(id));
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/songsByMusicianId")
+    public Object getSongsByMusicianId(HttpServletRequest req){
+        String id = req.getParameter("id");
+        return songService.getSongsByMusician(Long.valueOf(id));
+    }
 }
