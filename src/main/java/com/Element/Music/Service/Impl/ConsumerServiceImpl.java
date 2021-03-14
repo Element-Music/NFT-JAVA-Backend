@@ -5,6 +5,7 @@ import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
 import com.Element.Music.Repository.MusicRepository.SongRepository;
+import com.Element.Music.Service.PurseService;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.PaternUtil;
@@ -25,13 +26,17 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     private final SongService songService;
 
+    private final PurseService purseService;
+
     private final MessageDigest MD5 = MessageDigest.getInstance("MD5");
 
-    public ConsumerServiceImpl(ConsumerRepository consumerRepository, SongService songService) throws NoSuchAlgorithmException {
+    public ConsumerServiceImpl(ConsumerRepository consumerRepository, SongService songService, PurseService purseService) throws NoSuchAlgorithmException {
 
         this.consumerRepository = consumerRepository;
 
         this.songService = songService;
+
+        this.purseService = purseService;
     }
 
     @Override
@@ -82,7 +87,12 @@ public class ConsumerServiceImpl implements ConsumerService {
         }
         String pwd = consumer.getPassWord();
         consumer.setPassWord(DigestUtils.md5DigestAsHex(pwd.getBytes()));
-        return consumerRepository.save(consumer);
+        Consumer returnConsumer = consumerRepository.save(consumer);
+        if(returnConsumer != null){
+            Long consumerId = returnConsumer.getId();
+            purseService.initializePurse(consumerId);
+        }
+        return returnConsumer;
     }
 
     @Override

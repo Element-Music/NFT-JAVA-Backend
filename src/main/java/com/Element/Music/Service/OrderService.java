@@ -1,5 +1,12 @@
 package com.Element.Music.Service;
 
-public interface OrderService {
+import com.Element.Music.IdProducer.OrderId;
+import com.Element.Music.Model.DAO.TradeDAO.ConsumerOrder;
+import java.util.List;
 
+public interface OrderService {
+    OrderId generateOrderId ();
+    int addNewOrder(Long songId, Long consumerId);
+    List<ConsumerOrder> getOrderByConsumerId(Long consumerId);
+    List<ConsumerOrder> getAllOrder();
 }

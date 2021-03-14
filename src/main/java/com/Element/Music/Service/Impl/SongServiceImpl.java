@@ -83,6 +83,12 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public void updateSongPrice(Song song, Double price) {
+        song.setPrice(price);
+        songRepository.save(song);
+    }
+
+    @Override
     public boolean updateSongPic(Song song) throws SongException {
         if (song == null || song.getRepresentImagePath() == null) {
             if (song == null)

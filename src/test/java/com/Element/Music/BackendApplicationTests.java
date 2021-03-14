@@ -44,9 +44,9 @@ class BackendApplicationTests {
         musicianService.addMusician(musician);
     }
 
-    @Test
-    void testGetPrice() {
-        Price price = songService.getSongById(4).getPrice();
-        System.out.println("原价是" + price.getOriginalPrice());
-    }
+//    @Test
+//    void testGetPrice() {
+//        Price price = songService.getSongById(4).getPrice();
+//        System.out.println("原价是" + price.getOriginalPrice());
+//    }
 }

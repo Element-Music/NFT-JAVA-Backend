@@ -28,7 +28,8 @@ import java.util.Date;
 @RequestMapping("/consumer")
 public class ConsumerController {
 
-    private final ConsumerService consumerService;
+    private final ConsumerService consumerService; //null
+
 
     @Value("${consumer_portrait.path}")
     private String consumerPortrait;
@@ -36,9 +37,7 @@ public class ConsumerController {
     @Value("${user.path}")
     private String userPath;
 
-    public ConsumerController(ConsumerService consumerService) {
-        this.consumerService = consumerService;
-    }
+    public ConsumerController(ConsumerService consumerService) { this.consumerService = consumerService; }
 
     @Configuration
     public class MyPicConfig implements WebMvcConfigurer {
@@ -80,12 +79,24 @@ public class ConsumerController {
         }
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
-        Consumer res = null;
-        res = consumerService.addConsumer(consumer);
+        Consumer addConsumerRes = null;
+        addConsumerRes = consumerService.addConsumer(consumer);
 
-        if (res != null) {
+//        Purse addPurseRes = null;
+
+
+        if (addConsumerRes != null) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "注册成功");
+
+
+//            PurseController purseController = new PurseController(purseService);
+//
+//            Object initializePurseRes = purseController.initializeBalance(addConsumerRes);
+//            System.out.println("addConsumerRes");
+//            System.out.println(addConsumerRes);
+//            System.out.println("initializePurseRes");
+//            System.out.println(initializePurseRes);
         } else {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "注册失败,该用户已存在");
