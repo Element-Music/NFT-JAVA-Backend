@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Mac Cache ###
-.DS_store
+.DS_Store
