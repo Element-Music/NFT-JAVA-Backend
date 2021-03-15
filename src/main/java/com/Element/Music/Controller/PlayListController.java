@@ -76,7 +76,7 @@ public class PlayListController {
     }
 
 
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deletePlayList(HttpServletRequest req) {
         String id = req.getParameter("id");
         JSONObject jsonObject = new JSONObject();
@@ -93,7 +93,7 @@ public class PlayListController {
 
     @ResponseBody
     @RequestMapping(value = "/image/update", method = RequestMethod.POST)
-    public Object updateSingerPic(@RequestParam("imagePath") MultipartFile portraitFile, @RequestParam("id") long id) {
+    public Object updatePlayListPic(@RequestParam("imagePath") MultipartFile portraitFile, @RequestParam("id") long id) {
         JSONObject jsonObject = new JSONObject();
 
         if (portraitFile.isEmpty()) {

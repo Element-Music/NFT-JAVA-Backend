@@ -33,7 +33,6 @@ public class PlayListServiceImpl implements PlayListService {
         Set<Song> songs = new HashSet<>();
         PlayList playList = new PlayList();
         for(String id:songId){
-            System.out.println(id);
             Song curSong = songService.getSongById(Long.parseLong(id));
             songs.add(curSong);
         }
@@ -46,7 +45,7 @@ public class PlayListServiceImpl implements PlayListService {
 
     @Override
     public PlayList getPlaylistById(Long id){
-        Optional<PlayList> playListOptional = playlistRepository.findById(id);
+        Optional<PlayList> playListOptional = playlistRepository.findByIdAndDeletedIsFalse(id);
         return playListOptional.orElse(null);
     }
 
@@ -57,7 +56,7 @@ public class PlayListServiceImpl implements PlayListService {
 
     @Override
     public boolean deletePlayListById(Long id) {
-        Optional<PlayList> playlistOptional = playlistRepository.findById(id);
+        Optional<PlayList> playlistOptional = playlistRepository.findByIdAndDeletedIsFalse(id);
         if (playlistOptional.orElse(null) != null) {
             PlayList playlist = playlistOptional.orElse(null);
             playlist.setDeleted(true);
@@ -74,7 +73,7 @@ public class PlayListServiceImpl implements PlayListService {
                 throw new PlaylistException("更改图片接口缺失musician");
             else throw new PlaylistException("更改图片接口缺失portrait");
         }
-        Optional<PlayList> playlistOptional = playlistRepository.findById(playlist.getId());
+        Optional<PlayList> playlistOptional = playlistRepository.findByIdAndDeletedIsFalse(playlist.getId());
         if (playlistOptional.get() != null || playlistOptional.get().isDeleted() == false) {
             PlayList playlist1 = playlistOptional.get();
             playlist1.setRepresentImagePath(playlist.getRepresentImagePath());

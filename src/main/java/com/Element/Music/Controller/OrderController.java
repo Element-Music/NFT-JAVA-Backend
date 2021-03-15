@@ -28,7 +28,7 @@ public class OrderController {
 
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Object addSinger(HttpServletRequest req) {
+    public Object addOrder(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String consumerId = req.getParameter("consumerId").trim();
         String songId = req.getParameter("songId").trim();
@@ -52,7 +52,7 @@ public class OrderController {
 
     }
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/getOrderById", method = RequestMethod.GET)
     public Object orderOfConsumerId(HttpServletRequest req) {
         String consumerId = req.getParameter("consumerId");
         return orderService.getOrderByConsumerId(Long.parseLong(consumerId));

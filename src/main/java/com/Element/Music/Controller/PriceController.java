@@ -35,7 +35,7 @@ public class PriceController {
 
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Object addSinger(HttpServletRequest req) {
+    public Object addPrice(HttpServletRequest req) {
         JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id").trim();
         String originalPrice = req.getParameter("originalPrice").trim();
@@ -59,8 +59,8 @@ public class PriceController {
         return jsonObject;
     }
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
-    public Object BalanceOfUserId(HttpServletRequest req) {
+    @RequestMapping(value = "/getPriceById", method = RequestMethod.GET)
+    public Object PriceOfSongId(HttpServletRequest req) {
         String id = req.getParameter("id");
         return priceService.getDisplayPriceById(Long.parseLong(id));
     }
