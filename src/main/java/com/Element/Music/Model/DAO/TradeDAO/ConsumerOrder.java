@@ -1,7 +1,7 @@
 package com.Element.Music.Model.DAO.TradeDAO;
 
 import com.Element.Music.Model.DAO.BaseEntity;
-import com.Element.Music.Model.DAO.MusicDAO.Song;
+import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,11 +19,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class ConsumerOrder extends BaseEntity {
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private Set<Song> song;
+    private Long priceId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Consumer consumer;
+    private Long songId;
+
+    private Long consumerId;
 
     private Long orderCode;
 

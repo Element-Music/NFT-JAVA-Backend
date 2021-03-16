@@ -61,7 +61,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public List<Song> getSongsByMusician(long musicianId) {
 //        return songRepository.findAllByMusician(musicianService.getMusicianById(musicianId));
-        return songRepository.findAllByMusicianAndDeletedIsFalse(musicianService.getMusicianById(musicianId));
+        return songRepository.findAllByMusicianAndDeletedIsFalse(getMusicianById(musicianId));
     }
 
     @Override
@@ -80,6 +80,12 @@ public class SongServiceImpl implements SongService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void updateSongPrice(Song song, Double price) {
+        song.setPrice(price);
+        songRepository.save(song);
     }
 
     @Override

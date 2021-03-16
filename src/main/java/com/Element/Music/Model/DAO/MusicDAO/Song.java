@@ -52,9 +52,8 @@ public class Song extends BaseEntity implements Serializable {
 
     private int liked;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
-    private Price price;
+    private Double price;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "collections")
-    private Set<Consumer> consumers;
+    /*@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "collections")
+    private Set<Consumer> consumers;*/
 }

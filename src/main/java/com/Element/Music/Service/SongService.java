@@ -22,6 +22,8 @@ public interface SongService {
 
     boolean updateSong(Song song) throws SongException;
 
+    void updateSongPrice(Song song, Double price);
+
     boolean updateSongPic(Song song) throws SongException;
 
     boolean updateSongUrl(Song song) throws SongException;
