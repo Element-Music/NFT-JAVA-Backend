@@ -194,7 +194,7 @@ public class MusicianController {
         }
     }
 
-    @RequestMapping(value = "/musicianPicture", method = RequestMethod.GET)
+    @RequestMapping(value = "/musicianPicture", method = RequestMethod.POST)
     public String getMusicianPortrait(HttpServletRequest req) {
         String id = req.getParameter("id");
         return musicianService.getMusicianPortrait(Long.parseLong(id));
