@@ -250,7 +250,7 @@ public class ConsumerController {
     }
 
     //    删除用户
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deleteUser(HttpServletRequest req) {
         String id = req.getParameter("id");
         return consumerService.removeById(Integer.parseInt(id));

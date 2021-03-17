@@ -99,7 +99,7 @@ public class MusicianController {
 
 
     //    删除歌手
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deleteSinger(HttpServletRequest req) {
         String id = req.getParameter("id");
         return musicianService.removeById(Long.parseLong(id));

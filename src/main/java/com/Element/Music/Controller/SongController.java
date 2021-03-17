@@ -149,7 +149,7 @@ public class SongController {
     }
 
     //    删除歌曲
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deleteSong(HttpServletRequest req) {
         String id = req.getParameter("id");
         return songService.deleteSong(Integer.parseInt(id));
