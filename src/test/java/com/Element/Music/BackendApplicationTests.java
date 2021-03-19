@@ -24,25 +24,25 @@ class BackendApplicationTests {
     @Autowired
     private SongService songService;
 
-    @Test
-    void contextLoads() {
-        Song song = Song.builder().description("description")
-                .genre(Genre.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
-                .url("http://...com").build();
-        Set<Song> songs = new HashSet<>();
-        songs.add(song);
+    // @Test
+    // void contextLoads() {
+    //     Song song = Song.builder().description("description")
+    //             .genre(Genre.JAZZ).lyric("lyric").songName("song").representImagePath("imagePath")
+    //             .url("http://...com").build();
+    //     Set<Song> songs = new HashSet<>();
+    //     songs.add(song);
 
-        Musician musician = Musician.builder().genre(Genre.JAZZ).description("这是一个歌手")
-                .representativeWork("lujing").songs(songs).weibo("weibo").build();
-        musician.setName("name");
-        musician.setBirth(new Date(1995, 10, 29));
-        musician.setEmail("740612415@qq.com");
-        musician.setLocation("China");
-        musician.setSex(Sex.valueOf("MALE"));
-        musician.setPhoneNum("13151081251");
-        musician.setPortrait("imagePath");
-        musicianService.addMusician(musician);
-    }
+    //     Musician musician = Musician.builder().genre(Genre.JAZZ).description("这是一个歌手")
+    //             .representativeWork("lujing").songs(songs).weibo("weibo").build();
+    //     musician.setName("name");
+    //     musician.setBirth(new Date(1995, 10, 29));
+    //     musician.setEmail("740612415@qq.com");
+    //     musician.setLocation("China");
+    //     musician.setSex(Sex.valueOf("MALE"));
+    //     musician.setPhoneNum("13151081251");
+    //     musician.setPortrait("imagePath");
+    //     musicianService.addMusician(musician);
+    // }
 
 //    @Test
 //    void testGetPrice() {
