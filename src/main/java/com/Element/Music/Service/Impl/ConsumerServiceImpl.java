@@ -4,8 +4,6 @@ import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.UserRepository.ConsumerRepository;
-import com.Element.Music.Repository.MusicRepository.SongRepository;
-import com.Element.Music.Service.PurseService;
 import com.Element.Music.Service.ConsumerService;
 import com.Element.Music.Service.SongService;
 import com.Element.Music.Util.PaternUtil;
@@ -27,17 +25,14 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     private final SongService songService;
 
-    private final PurseService purseService;
-
     private final MessageDigest MD5 = MessageDigest.getInstance("MD5");
 
-    public ConsumerServiceImpl(ConsumerRepository consumerRepository, SongService songService, PurseService purseService) throws NoSuchAlgorithmException {
+    public ConsumerServiceImpl(ConsumerRepository consumerRepository, SongService songService) throws NoSuchAlgorithmException {
 
         this.consumerRepository = consumerRepository;
 
         this.songService = songService;
 
-        this.purseService = purseService;
     }
 
     @Override
@@ -89,10 +84,6 @@ public class ConsumerServiceImpl implements ConsumerService {
         String pwd = consumer.getPassWord();
         consumer.setPassWord(DigestUtils.md5DigestAsHex(pwd.getBytes()));
         Consumer returnConsumer = consumerRepository.save(consumer);
-        if(returnConsumer != null){
-            Long consumerId = returnConsumer.getId();
-            purseService.initializePurse(consumerId);
-        }
         return returnConsumer;
     }
 
@@ -108,10 +99,45 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
+    public void addToMySong(long consumerId, long songId) {
+        Song song = songService.getSongById(songId);
+        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+        Consumer consumer = optionalConsumer.get();
+        Set<Song> likes = consumer.getMySongs();
+        likes.add(song);
+        consumer.setMySongs(likes);
+        consumerRepository.save(consumer);
+
+
+//        Set<Song> myCollections = consumer.getMySongs();
+//        myCollections.add(song);
+//        consumer.setCollections(myCollections);
+//        consumerRepository.save(consumer);
+    }
+
+    @Override
+    public Set<Song> getMySong(long consumerId) {
+        Consumer consumer = getConsumerByID(consumerId);
+        return consumer.getMySongs();
+    }
+
+    @Override
     public Set<Song> getCollection(long consumerId) {
 //        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
         Consumer consumer = getConsumerByID(consumerId);
         return consumer.getCollections();
+    }
+
+    public void removeFromCollection(long consumerId, long songId){
+        Song song = songService.getSongById(songId);
+        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+        Consumer consumer = optionalConsumer.get();
+        Set<Song> likes = consumer.getCollections();
+        if(likes.contains(song)){
+            likes.remove(song);
+        }
+        consumer.setCollections(likes);
+        consumerRepository.save(consumer);
     }
 
     @Override
@@ -119,16 +145,6 @@ public class ConsumerServiceImpl implements ConsumerService {
         return consumerRepository.findById(id).orElse(null);
     }
 
-
-    @Override
-    public void addToPaidList(long consumerId, Song song) {
-        consumerRepository.getOne(consumerId).getCollections().add(song);
-    }
-
-    @Override
-    public Set<Song> getPaidList(long consumerId) {
-        return consumerRepository.getOne(consumerId).getCollections();
-    }
 
     @Override
     @Deprecated
@@ -146,6 +162,11 @@ public class ConsumerServiceImpl implements ConsumerService {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public Consumer getConsumerInfoOnceLogin(String user){
+        return consumerRepository.findByEmail(user);
     }
 
 //    @Override

@@ -52,21 +52,21 @@ public class OrderController {
 
     }
 
-    @RequestMapping(value = "/getOrderById", method = RequestMethod.GET)
-    public Object orderOfConsumerId(HttpServletRequest req) {
-        String consumerId = req.getParameter("consumerId");
-        return orderService.getOrderByConsumerId(Long.parseLong(consumerId));
-    }
+//    @RequestMapping(value = "/getOrderById", method = RequestMethod.GET)
+//    public Object orderOfConsumerId(HttpServletRequest req) {
+//        String consumerId = req.getParameter("consumerId");
+//        return orderService.getOrderByConsumerId(Long.parseLong(consumerId));
+//    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Object allOrder(HttpServletRequest req) {
         return orderService.getAllOrder();
     }
 
-    @RequestMapping(value = "/getOrderSong", method = RequestMethod.GET)
-    public Object orderSongOfConsumerId(HttpServletRequest req) {
-        String consumerId = req.getParameter("consumerId");
-        return orderService.getSongIdByConsumerId(Long.parseLong(consumerId));
-    }
+//    @RequestMapping(value = "/getOrderSong", method = RequestMethod.GET)
+//    public Object orderSongOfConsumerId(HttpServletRequest req) {
+//        String consumerId = req.getParameter("consumerId");
+//        return orderService.getSongIdByConsumerId(Long.parseLong(consumerId));
+//    }
 
 }

@@ -34,3 +34,6 @@ build/
 
 ### Mac Cache ###
 .DS_Store
+
+### mp3 and img
+element_java/

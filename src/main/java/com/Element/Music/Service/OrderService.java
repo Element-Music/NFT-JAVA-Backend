@@ -8,7 +8,7 @@ import java.util.List;
 public interface OrderService {
     OrderId generateOrderId ();
     int addNewOrder(Long songId, Long consumerId);
-    List<ConsumerOrder> getOrderByConsumerId(Long consumerId);
+//    List<ConsumerOrder> getOrderByConsumerId(Long consumerId);
     List<ConsumerOrder> getAllOrder();
-    List<Song> getSongIdByConsumerId(Long consumerId);
+//    List<Song> getSongIdByConsumerId(Long consumerId);
 }

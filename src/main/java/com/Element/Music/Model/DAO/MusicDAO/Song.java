@@ -52,7 +52,9 @@ public class Song extends BaseEntity implements Serializable {
 
     private int liked;
 
-    private Double price;
+//    @OneToOne(mappedBy = "song")
+//    @JsonIgnoreProperties({"song"})
+//    private Price price;
 
     /*@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "collections")
     private Set<Consumer> consumers;*/

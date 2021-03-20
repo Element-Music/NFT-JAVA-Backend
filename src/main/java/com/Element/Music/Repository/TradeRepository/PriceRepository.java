@@ -5,5 +5,5 @@ import com.Element.Music.Model.DAO.MusicDAO.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PriceRepository extends JpaRepository<Price, Long> {
-    Price findBySongIdAndDeletedIsFalse(Long songId);
+    Price findBySongAndDeletedIsFalse(Song song);
 }

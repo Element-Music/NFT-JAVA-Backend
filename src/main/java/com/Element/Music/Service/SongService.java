@@ -22,7 +22,7 @@ public interface SongService {
 
     boolean updateSong(Song song) throws SongException;
 
-    void updateSongPrice(Song song, Double price);
+//    void updateSongPrice(Song song, Double price);
 
     boolean updateSongPic(Song song) throws SongException;
 

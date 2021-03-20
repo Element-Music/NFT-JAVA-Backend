@@ -1,15 +1,15 @@
 package com.Element.Music.Service.Impl;
 
+import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Repository.TradeRepository.OrderRepository;
+import com.Element.Music.Repository.TradeRepository.PurseRepository;
 import com.Element.Music.Model.DAO.TradeDAO.*;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Service.*;
 import org.springframework.stereotype.Service;
 import com.Element.Music.IdProducer.OrderId;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -17,20 +17,20 @@ public class OrderServiceImpl implements OrderService {
 
     private final PriceService priceService;
 
+    private final ConsumerService consumerService;
+
     private final PurseService purseService;
 
-    private final SongService songService;
-
-
-    public OrderServiceImpl(OrderRepository orderRepository, PriceService priceService, PurseService purseService, SongService songService) throws NoSuchAlgorithmException {
+    public OrderServiceImpl(OrderRepository orderRepository, PriceService priceService, ConsumerService consumerService, PurseService purseService) throws NoSuchAlgorithmException {
 
         this.orderRepository = orderRepository;
 
         this.priceService = priceService;
 
+        this.consumerService = consumerService;
+
         this.purseService = purseService;
 
-        this.songService = songService;
     }
 
     @Override
@@ -50,46 +50,50 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int addNewOrder(Long songId, Long consumerId) {
-
-        Purse consumerPurse = purseService.getPurseById(consumerId);
+        Double consumerBalance = purseService.getBalanceByID(consumerId);
         Price songPrice = priceService.getPriceById(songId);
-        if (songPrice.getShowPrice() > consumerPurse.getBalance()) {
+        if (songPrice.getShowPrice() > consumerBalance) {
             return -1;
         } //Error Code -1: 余额不够
         OrderId orderId = generateOrderId();
+        Consumer consumer = consumerService.getConsumerByID(consumerId);
 
         ConsumerOrder order = new ConsumerOrder();
-        order.setConsumerId(consumerId);
+        order.setConsumer(consumer);
         order.setDiscount(0.0);
         order.setPayPrice(songPrice.getShowPrice());
-        order.setPriceId(songPrice.getId());
-        order.setSongId(songPrice.getSongId());
+        order.setPrice(songPrice);
+//        order.setSong(songService.getSongById(songId));
         order.setOrderCode(orderId.nextId());
         ConsumerOrder returnOrder = orderRepository.save(order);
         if(returnOrder == null){
             return -2; //Error Code: -2: 保存订单失败
         }
-        purseService.withdrawBalanceById(consumerId, songPrice.getShowPrice());
+        Purse consumerPurse = purseService.withdrawBalanceById(consumerId, songPrice.getShowPrice());
+        if(consumerPurse == null) return -1; //用户余额不够
+//        Song purchasedSong = songPrice.getSong();
+        consumerService.addToMySong(consumerId, songId);
+
         return 1; //新增订单成功
     }
 
 
-    @Override
-    public List<ConsumerOrder> getOrderByConsumerId(Long consumerId){
-        return orderRepository.findAllByConsumerIdAndDeletedIsFalse(consumerId);
-    }
-
-    @Override
-    public List<Song> getSongIdByConsumerId(Long consumerId){
-        List<ConsumerOrder> orderRes = orderRepository.findAllByConsumerIdAndDeletedIsFalse(consumerId);
-        List<Song> returnSong = new ArrayList<>();
-
-        for(ConsumerOrder consumerOrder: orderRes){
-            returnSong.add(songService.getSongById(consumerOrder.getSongId()));
-        }
-
-        return returnSong;
-    }
+//    @Override
+//    public List<ConsumerOrder> getOrderByConsumerId(Long consumerId){
+//        return orderRepository.findAllByConsumerIdAndDeletedIsFalse(consumerId);
+//    }
+//
+//    @Override
+//    public List<Song> getSongIdByConsumerId(Long consumerId){
+//        List<ConsumerOrder> orderRes = orderRepository.findAllByConsumerIdAndDeletedIsFalse(consumerId);
+//        List<Song> returnSong = new ArrayList<>();
+//
+//        for(ConsumerOrder consumerOrder: orderRes){
+//            returnSong.add(priceService.getSongById(consumerOrder.getSongId()));
+//        }
+//
+//        return returnSong;
+//    }
 
     public List<ConsumerOrder> getAllOrder(){
         return orderRepository.findAll();

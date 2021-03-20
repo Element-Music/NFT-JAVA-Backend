@@ -3,6 +3,7 @@ package com.Element.Music.Model.DAO.TradeDAO;
 import com.Element.Music.Model.DAO.BaseEntity;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,16 @@ import java.util.Set;
 @AllArgsConstructor
 public class ConsumerOrder extends BaseEntity {
 
-    private Long priceId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Price price;
 
-    private Long songId;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"consumer_order"})
+    private Consumer consumer;
 
-    private Long consumerId;
+//    private Long songId;
+
+//    private Long consumerId;
 
     private Long orderCode;
 

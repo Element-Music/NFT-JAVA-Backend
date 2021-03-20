@@ -2,6 +2,7 @@ package com.Element.Music.Service.Impl;
 
 import com.Element.Music.Exception.SongException;
 import com.Element.Music.Model.DAO.TradeDAO.Price;
+import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Repository.TradeRepository.PriceRepository;
 import com.Element.Music.Service.PriceService;
 import com.Element.Music.Service.SongService;
@@ -23,25 +24,24 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public Price initializePrice(Long songId, Double originalPrice, Double rate)  {
         Price price = new Price();
-        price.setSongId(songId);
+        Song curSong = songService.getSongById(songId);
+        price.setSong(curSong);
         price.setOriginalPrice(originalPrice);
         price.setRate(rate);
         Price initializeRes = priceRepository.save(price);
-        if(initializeRes != null){
-            songService.updateSongPrice(songService.getSongById(songId), initializeRes.getShowPrice());
-        }
         return initializeRes;
     }
 
+
     @Override
     public Price getPriceById(Long songId){
-        return priceRepository.findBySongIdAndDeletedIsFalse(songId);
+        return priceRepository.findBySongAndDeletedIsFalse(songService.getSongById(songId));
     }
 
 
     @Override
     public Double getDisplayPriceById(Long songId){
-        Price returnPrice = priceRepository.findBySongIdAndDeletedIsFalse(songId);
+        Price returnPrice = priceRepository.findBySongAndDeletedIsFalse(songService.getSongById(songId));
         if(returnPrice == null){
             return -1.0;
         }

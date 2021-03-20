@@ -2,6 +2,7 @@ package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.TradeDAO.ConsumerOrder;
+import com.Element.Music.Model.DAO.TradeDAO.Purse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -27,10 +28,19 @@ public class Consumer extends User implements Serializable {
     private Set<Song> collections;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"price"})
     private Set<Song> mySongs;
 
     @NonNull
     private String passWord;
+
+    @OneToOne(mappedBy = "consumer")
+    @JsonIgnoreProperties({"consumer"})
+    private Purse purse;
+
+//    @OneToOne(mappedBy = "consumer")
+//    @JsonIgnoreProperties({"consumer"})
+//    private ConsumerOrder consumerOrder;
 
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private Set<Song> playList;

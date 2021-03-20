@@ -118,6 +118,13 @@ public class ConsumerController {
         if (res == 0) {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "登录成功");
+            Consumer loggedInConusmer = consumerService.getConsumerInfoOnceLogin(username);
+            jsonObject.put("username", username);
+            jsonObject.put("collection", loggedInConusmer.getMySongs());
+            jsonObject.put("balance", loggedInConusmer.getPurse().getBalance());
+//            Long consumerId = loggedInConusmer.getId();
+            jsonObject.put("wishlist", loggedInConusmer.getCollections());
+
             //jsonObject.put("userMsg", consumerService.loginStatus(username));
             session.setAttribute("username", username);
             String sessionId = session.getId();
@@ -138,19 +145,35 @@ public class ConsumerController {
         }
     }
 
-    @RequestMapping(value = "/addToCollection", method = RequestMethod.POST)
-    public Object collect(HttpServletRequest req) {
+    @RequestMapping(value = "/addToWishlist", method = RequestMethod.POST)
+    public Object addToWishlist(HttpServletRequest req) {
         String songId = req.getParameter("songId");
         String consumerId = req.getParameter("consumerId");
         consumerService.addToCollection(Long.parseLong(consumerId), Long.parseLong(songId));
         return consumerService.getCollection(Long.parseLong(consumerId));
     }
 
-    @RequestMapping(value = "/getCollection", method = RequestMethod.GET)
-    public Object getCollection(HttpServletRequest req) {
+    @RequestMapping(value = "/removeFromWishlist", method = RequestMethod.POST)
+    public Object removeFromWishlist(HttpServletRequest req) {
+        String songId = req.getParameter("songId");
+        String consumerId = req.getParameter("consumerId");
+        consumerService.removeFromCollection(Long.parseLong(consumerId), Long.parseLong(songId));
+        return consumerService.getCollection(Long.parseLong(consumerId));
+    }
+
+    @RequestMapping(value = "/getWishlist", method = RequestMethod.GET)
+    public Object getWishlist(HttpServletRequest req) {
         String consumerId = req.getParameter("id");
         return consumerService.getCollection(Long.parseLong(consumerId));
     }
+
+    @RequestMapping(value = "/getCollection", method = RequestMethod.GET)
+    public Object getCollection(HttpServletRequest req) {
+        String consumerId = req.getParameter("id");
+        return consumerService.getMySong(Long.parseLong(consumerId));
+    }
+
+
 
     //    返回指定ID的用户
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
@@ -159,6 +182,8 @@ public class ConsumerController {
         Consumer consumer = consumerService.getConsumerByID(Long.parseLong(id));
         return consumer;
     }
+
+
 
 //    @ResponseBody
 //    @Deprecated

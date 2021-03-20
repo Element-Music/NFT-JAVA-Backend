@@ -21,11 +21,13 @@ public interface ConsumerService {
 
     void addToCollection(long consumerId, long songId);
 
+    void removeFromCollection(long consumerId, long songId);
+
     Set<Song> getCollection(long consumerId);
 
-    void addToPaidList(long consumerId, Song song);
+    void addToMySong(long consumerId, long songId);
 
-    Set<Song> getPaidList(long consumerId);
+    Set<Song> getMySong(long consumerId);
 
     int verifyPasswdByUser(String user, String passWord) throws UnsupportedEncodingException;
 
@@ -38,4 +40,6 @@ public interface ConsumerService {
     List<Consumer> getAllUser();
 
     boolean removeById(long id);
+
+    Consumer getConsumerInfoOnceLogin(String user);
 }
