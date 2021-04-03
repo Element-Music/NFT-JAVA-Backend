@@ -60,11 +60,13 @@ public class MusicianController {
         Musician musician = Musician.builder().genre(Genre.valueOf(musicType))
                 .description(description).name(name).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myBirth = new Date();
+        Date myBirth;
         try {
             myBirth = dateFormat.parse(birth);
         } catch (Exception e) {
-            e.printStackTrace();
+            jsonObject.put("code", 2);
+            jsonObject.put("msg", "生日日期格式错误");
+            return jsonObject;
         }
         musician.setName(name);
         musician.setBirth(myBirth);
@@ -74,14 +76,13 @@ public class MusicianController {
         Musician res = musicianService.addMusician(musician);
 
         if (res != null) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "添加成功");
-            return jsonObject;
-        } else {
             jsonObject.put("code", 0);
+            jsonObject.put("msg", "添加成功");
+        } else {
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "添加失败");
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    返回所有歌手
@@ -97,12 +98,18 @@ public class MusicianController {
         return musicianService.getMusicianByName(name);
     }
 
-
     //    删除歌手
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deleteSinger(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return musicianService.removeById(Long.parseLong(id));
+        JSONObject jsonObject = new JSONObject();
+        if (!musicianService.removeById(Long.parseLong(id))) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "删除音乐人失败");
+        }
+        jsonObject.put("code", 0);
+        jsonObject.put("msg", "删除音乐人成功");
+        return jsonObject;
     }
 
     //    更新歌手信息
@@ -124,7 +131,9 @@ public class MusicianController {
         try {
             myBirth = dateFormat.parse(birth);
         } catch (Exception e) {
-            e.printStackTrace();
+            jsonObject.put("code", 2);
+            jsonObject.put("msg", "生日日期格式错误");
+            return jsonObject;
         }
         musician.setName(name);
         musician.setBirth(myBirth);
@@ -134,10 +143,10 @@ public class MusicianController {
 
         boolean res = musicianService.updateMusicianMsg(musician);
         if (res) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "修改成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "修改失败");
         }
         return jsonObject;
@@ -176,22 +185,18 @@ public class MusicianController {
             musician.setPortrait(storePortraitPath);
             boolean res = musicianService.updateSingerPic(musician);
             if (res) {
-                jsonObject.put("code", 1);
+                jsonObject.put("code", 0);
                 jsonObject.put("pic", storePortraitPath);
                 jsonObject.put("msg", "上传成功");
-                return jsonObject;
             } else {
-                jsonObject.put("code", 0);
+                jsonObject.put("code", 1);
                 jsonObject.put("msg", "上传失败");
-                return jsonObject;
             }
-        } catch (IOException e) {
-            jsonObject.put("code", 0);
+        } catch (IOException | MusicianException e) {
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "上传失败" + e.getMessage());
-            return jsonObject;
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     @RequestMapping(value = "/musicianPicture", method = RequestMethod.POST)

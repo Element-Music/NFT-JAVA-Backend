@@ -219,8 +219,6 @@ public class ConsumerServiceImpl implements ConsumerService {
         return true;
     }
 
-
-
     @Override
     public List<Consumer> getAllUser() {
         return consumerRepository.findAll();
@@ -229,14 +227,10 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public boolean removeById(long id) {
         Optional<Consumer> consumerOptional = consumerRepository.findById(id);
-        if (consumerOptional.get() != null) {
-            Consumer consumer = consumerOptional.get();
-            consumer.setDeleted(true);
-            consumerRepository.save(consumer);
-            return true;
-        }
-        return false;
+        if (consumerOptional.isEmpty()) return false;
+        Consumer consumer = consumerOptional.get();
+        consumer.setDeleted(true);
+        consumerRepository.save(consumer);
+        return true;
     }
-
-
 }

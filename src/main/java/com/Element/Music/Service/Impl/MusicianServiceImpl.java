@@ -97,13 +97,11 @@ public class MusicianServiceImpl implements MusicianService {
 //        musicianRepository.deleteById(id);
 //        return musicianRepository.findById(id).get() == null;
         Optional<Musician> musicianOptional = musicianRepository.findById(id);
-        if (musicianOptional.orElse(null) != null) {
-            Musician musician = musicianOptional.orElse(null);
-            musician.setDeleted(true);
-            musicianRepository.save(musician);
-            return true;
-        }
-        return false;
+        if (musicianOptional.isEmpty()) return false;
+        Musician musician = musicianOptional.get();
+        musician.setDeleted(true);
+        musicianRepository.save(musician);
+        return true;
     }
 
     @Override

@@ -267,7 +267,13 @@ public class ConsumerController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public void deleteUser(HttpServletRequest req) {
         String id = req.getParameter("id");
-        consumerService.removeById(Integer.parseInt(id));
+        JSONObject jsonObject = new JSONObject();
+        if (!consumerService.removeById(Long.parseLong(id))) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "删除用户失败");
+        }
+        jsonObject.put("code", 0);
+        jsonObject.put("msg", "删除用户成功");
     }
 
     //    更新用户信息
@@ -326,6 +332,7 @@ public class ConsumerController {
     @ResponseBody
     @RequestMapping(value = "/portrait/update", method = RequestMethod.POST)
     public Object updateUserPic(@RequestParam("file") MultipartFile pictureFile, @RequestParam("id") long id) {
+        //TODO: wrap into global function to reduce duplicity
         JSONObject jsonObject = new JSONObject();
 
         if (pictureFile.isEmpty()) {
