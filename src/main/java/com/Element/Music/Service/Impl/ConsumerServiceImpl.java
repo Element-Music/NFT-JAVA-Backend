@@ -68,14 +68,10 @@ public class ConsumerServiceImpl implements ConsumerService {
         } else if (consumerRepository.findByPhoneNum(consumer.getPhoneNum()) != null ||
                 consumerRepository.findByEmail(consumer.getEmail()) != null) {
             return null;
-        } else if (consumer.getPassWord() == null || !PaternUtil.isUserName(consumer.getName()) ||
-                (consumer.getPhoneNum() == "" && !PaternUtil.isMobile(consumer.getPhoneNum())) ||
-                (consumer.getEmail() == "" && !PaternUtil.isEmail(consumer.getEmail()))) {
-            if (consumer.getPassWord() == null) {
-                throw new ConsumerException("absence of password");
-            } else if (consumer.getPhoneNum() == "" && !PaternUtil.isMobile(consumer.getPhoneNum())) {
-                throw new ConsumerException("phoneNumber is illegal");
-            } else if (consumer.getEmail() == "" && !PaternUtil.isEmail(consumer.getEmail())) {
+        } else if (!PaternUtil.isUserName(consumer.getName()) ||
+                (consumer.getPhoneNum().equals("") && !PaternUtil.isMobile(consumer.getPhoneNum())) ||
+                (consumer.getEmail().equals("") && !PaternUtil.isEmail(consumer.getEmail()))) {
+            if (consumer.getEmail().equals("") && !PaternUtil.isEmail(consumer.getEmail())) {
                 throw new ConsumerException("email is illegal");
             } else {
                 throw new ConsumerException("userName is illegal");
@@ -83,31 +79,31 @@ public class ConsumerServiceImpl implements ConsumerService {
         }
         String pwd = consumer.getPassWord();
         consumer.setPassWord(DigestUtils.md5DigestAsHex(pwd.getBytes()));
-        Consumer returnConsumer = consumerRepository.save(consumer);
-        return returnConsumer;
+        return consumerRepository.save(consumer);
     }
 
     @Override
-    public void addToCollection(long consumerId, long songId) {
+    public boolean addToWishlist(long consumerId, long songId) {
         Song song = songService.getSongById(songId);
-        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
-        Consumer consumer = optionalConsumer.get();
-        Set<Song> likes = consumer.getCollections();
-        likes.add(song);
-        consumer.setCollections(likes);
+        Consumer consumer = getConsumerByID(consumerId);
+        if (consumer == null) return false;
+        Set<Song> likes = consumer.getWishlist();
+        if (!likes.add(song)) return false;
+        consumer.setWishlist(likes);
         consumerRepository.save(consumer);
+        return true;
     }
 
     @Override
-    public void addToMySong(long consumerId, long songId) {
+    public boolean addToMySong(long consumerId, long songId) {
         Song song = songService.getSongById(songId);
-        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
-        Consumer consumer = optionalConsumer.get();
-        Set<Song> likes = consumer.getMySongs();
-        likes.add(song);
-        consumer.setMySongs(likes);
+        Consumer consumer = getConsumerByID(consumerId);
+        if (consumer == null) return false;
+        Set<Song> mySongs = consumer.getMySongs();
+        if (!mySongs.add(song)) return false;
+        consumer.setMySongs(mySongs);
         consumerRepository.save(consumer);
-
+        return true;
 
 //        Set<Song> myCollections = consumer.getMySongs();
 //        myCollections.add(song);
@@ -122,29 +118,28 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
-    public Set<Song> getCollection(long consumerId) {
-//        Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
+    public Set<Song> getWishlist(long consumerId) {
         Consumer consumer = getConsumerByID(consumerId);
-        return consumer.getCollections();
+        return consumer.getWishlist();
     }
 
-    public void removeFromCollection(long consumerId, long songId){
+    @Override
+    public void removeFromWishlist(long consumerId, long songId){
         Song song = songService.getSongById(songId);
         Optional<Consumer> optionalConsumer = consumerRepository.findById(consumerId);
-        Consumer consumer = optionalConsumer.get();
-        Set<Song> likes = consumer.getCollections();
-        if(likes.contains(song)){
+        if (optionalConsumer.isPresent()) {
+            Consumer consumer = optionalConsumer.get();
+            Set<Song> likes = consumer.getWishlist();
             likes.remove(song);
+            consumer.setWishlist(likes);
+            consumerRepository.save(consumer);
         }
-        consumer.setCollections(likes);
-        consumerRepository.save(consumer);
     }
 
     @Override
     public Consumer getConsumerByID(long id) {
         return consumerRepository.findById(id).orElse(null);
     }
-
 
     @Override
     @Deprecated

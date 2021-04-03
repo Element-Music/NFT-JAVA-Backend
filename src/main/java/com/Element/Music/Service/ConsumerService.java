@@ -19,13 +19,13 @@ public interface ConsumerService {
 
     Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
-    void addToCollection(long consumerId, long songId);
+    boolean addToWishlist(long consumerId, long songId);
 
-    void removeFromCollection(long consumerId, long songId);
+    void removeFromWishlist(long consumerId, long songId);
 
-    Set<Song> getCollection(long consumerId);
+    Set<Song> getWishlist(long consumerId);
 
-    void addToMySong(long consumerId, long songId);
+    boolean addToMySong(long consumerId, long songId);
 
     Set<Song> getMySong(long consumerId);
 

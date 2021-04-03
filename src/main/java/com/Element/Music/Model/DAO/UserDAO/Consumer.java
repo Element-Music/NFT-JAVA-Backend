@@ -23,9 +23,8 @@ public class Consumer extends User implements Serializable {
 
     private String nickName;
 
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Song> collections;
+    private Set<Song> wishlist;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"price"})

@@ -150,7 +150,7 @@ public class MusicianController {
         JSONObject jsonObject = new JSONObject();
 
         if (portraitFile.isEmpty()) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "文件上传失败！");
             return jsonObject;
         }

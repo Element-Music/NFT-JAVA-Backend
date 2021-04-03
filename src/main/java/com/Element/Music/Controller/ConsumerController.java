@@ -41,6 +41,7 @@ public class ConsumerController {
 
     @Configuration
     public class MyPicConfig implements WebMvcConfigurer {
+        // add picture function later
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
             registry.addResourceHandler("/img/consumerPic/**").addResourceLocations("file:" + consumerPortrait);
@@ -57,8 +58,8 @@ public class ConsumerController {
         String phoneNum = req.getParameter("phoneNum").trim();
         String email = req.getParameter("email").trim();
 
-        if (username.equals("") || username == null) {
-            jsonObject.put("code", 0);
+        if (username.equals("")) {
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "用户名或密码错误");
             return jsonObject;
         }
@@ -66,27 +67,20 @@ public class ConsumerController {
 
         consumer.setName(username);
         consumer.setPassWord(password);
-        if (phoneNum == "") {
-            consumer.setPhoneNum(null);
-        } else {
-            consumer.setPhoneNum(phoneNum);
-        }
+        if (phoneNum.equals("")) consumer.setPhoneNum(null);
+        else consumer.setPhoneNum(phoneNum);
 
-        if (email == "") {
-            consumer.setEmail(null);
-        } else {
-            consumer.setEmail(email);
-        }
+        if (email.equals("")) consumer.setEmail(null);
+        else consumer.setEmail(email);
+
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
-        Consumer addConsumerRes = null;
-        addConsumerRes = consumerService.addConsumer(consumer);
+        Consumer addConsumerRes = consumerService.addConsumer(consumer);
 
 //        Purse addPurseRes = null;
 
-
         if (addConsumerRes != null) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "注册成功");
 
 
@@ -98,7 +92,7 @@ public class ConsumerController {
 //            System.out.println("initializePurseRes");
 //            System.out.println(initializePurseRes);
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "注册失败,该用户已存在");
         }
         return jsonObject;
@@ -123,48 +117,51 @@ public class ConsumerController {
             jsonObject.put("collection", loggedInConusmer.getMySongs());
             jsonObject.put("balance", loggedInConusmer.getPurse().getBalance());
 //            Long consumerId = loggedInConusmer.getId();
-            jsonObject.put("wishlist", loggedInConusmer.getCollections());
-
+            jsonObject.put("wishlist", loggedInConusmer.getWishlist());
             //jsonObject.put("userMsg", consumerService.loginStatus(username));
             session.setAttribute("username", username);
             String sessionId = session.getId();
             jsonObject.put("sessionId", sessionId);
-            return jsonObject;
         } else if (res == 1) {
             jsonObject.put("code", 1);
             jsonObject.put("msg", "用户名格式错误");
-            return jsonObject;
         } else if (res == 2) {
             jsonObject.put("code", 2);
             jsonObject.put("msg", "该账户未注册");
-            return jsonObject;
         } else {
             jsonObject.put("code", 3);
             jsonObject.put("msg", "用户名和密码不匹配");
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     @RequestMapping(value = "/addToWishlist", method = RequestMethod.POST)
     public Object addToWishlist(HttpServletRequest req) {
         String songId = req.getParameter("songId");
         String consumerId = req.getParameter("consumerId");
-        consumerService.addToCollection(Long.parseLong(consumerId), Long.parseLong(songId));
-        return consumerService.getCollection(Long.parseLong(consumerId));
+        JSONObject jsonObject = new JSONObject();
+        if (!consumerService.addToWishlist(Long.parseLong(consumerId), Long.parseLong(songId))) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "添加失败");
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "添加成功");
+        }
+        return jsonObject;
     }
 
     @RequestMapping(value = "/removeFromWishlist", method = RequestMethod.POST)
     public Object removeFromWishlist(HttpServletRequest req) {
         String songId = req.getParameter("songId");
         String consumerId = req.getParameter("consumerId");
-        consumerService.removeFromCollection(Long.parseLong(consumerId), Long.parseLong(songId));
-        return consumerService.getCollection(Long.parseLong(consumerId));
+        consumerService.removeFromWishlist(Long.parseLong(consumerId), Long.parseLong(songId));
+        return consumerService.getWishlist(Long.parseLong(consumerId));
     }
 
     @RequestMapping(value = "/getWishlist", method = RequestMethod.GET)
     public Object getWishlist(HttpServletRequest req) {
         String consumerId = req.getParameter("id");
-        return consumerService.getCollection(Long.parseLong(consumerId));
+        return consumerService.getWishlist(Long.parseLong(consumerId));
     }
 
     @RequestMapping(value = "/getCollection", method = RequestMethod.GET)
@@ -173,17 +170,12 @@ public class ConsumerController {
         return consumerService.getMySong(Long.parseLong(consumerId));
     }
 
-
-
     //    返回指定ID的用户
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public Object userOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
-        Consumer consumer = consumerService.getConsumerByID(Long.parseLong(id));
-        return consumer;
+        return consumerService.getConsumerByID(Long.parseLong(id));
     }
-
-
 
 //    @ResponseBody
 //    @Deprecated
@@ -252,13 +244,12 @@ public class ConsumerController {
 //        }
 //    }
 
-
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Object logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.invalidate();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", 1);
+        jsonObject.put("code", 0);
         jsonObject.put("msg", "成功下线");
         return jsonObject;
     }
@@ -270,15 +261,13 @@ public class ConsumerController {
 //    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Object allSinger() {
-        return consumerService.getAllUser();
-    }
+    public Object allSinger() { return consumerService.getAllUser(); }
 
     //    删除用户
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public Object deleteUser(HttpServletRequest req) {
+    public void deleteUser(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return consumerService.removeById(Integer.parseInt(id));
+        consumerService.removeById(Integer.parseInt(id));
     }
 
     //    更新用户信息
@@ -296,18 +285,20 @@ public class ConsumerController {
         String location = req.getParameter("location").trim();
         String portrait = req.getParameter("portrait").trim();
 
-        if (username.equals("") || username == null) {
-            jsonObject.put("code", 0);
+        if (username.equals("")) {
+            jsonObject.put("code", 2);
             jsonObject.put("msg", "用户名或密码错误");
             return jsonObject;
         }
         Consumer consumer = new Consumer();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myBirth = new Date();
+        Date myBirth;
         try {
             myBirth = dateFormat.parse(birth);
         } catch (Exception e) {
-            e.printStackTrace();
+            jsonObject.put("code", 3);
+            jsonObject.put("msg", "生日日期格式错误");
+            return jsonObject;
         }
         consumer.setId(Long.parseLong(id));
         consumer.setName(username);
@@ -322,14 +313,13 @@ public class ConsumerController {
 
         boolean res = consumerService.updateConsumer(consumer);
         if (res) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "修改成功");
-            return jsonObject;
-        } else {
             jsonObject.put("code", 0);
+            jsonObject.put("msg", "修改成功");
+        } else {
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "修改失败");
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    更新用户头像
@@ -339,7 +329,7 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
 
         if (pictureFile.isEmpty()) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "文件上传失败！");
             return jsonObject;
         }
@@ -364,21 +354,17 @@ public class ConsumerController {
             consumer.setPortrait(portraitPath);
             boolean res = consumerService.updateUserPicture(consumer);
             if (res) {
-                jsonObject.put("code", 1);
+                jsonObject.put("code", 0);
                 jsonObject.put("portrait", portraitPath);
                 jsonObject.put("msg", "上传成功");
-                return jsonObject;
             } else {
-                jsonObject.put("code", 0);
+                jsonObject.put("code", 1);
                 jsonObject.put("msg", "上传失败");
-                return jsonObject;
             }
-        } catch (IOException e) {
-            jsonObject.put("code", 0);
+        } catch (IOException | ConsumerException e) {
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "上传失败" + e.getMessage());
-            return jsonObject;
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
 }
