@@ -188,8 +188,9 @@ public class ConsumerServiceImpl implements ConsumerService {
         if (consumer == null)
             throw new ConsumerException("更改用户接口缺失consumer");
         Optional<Consumer> consumerOptional = consumerRepository.findById(consumer.getId());
-        if (consumerOptional.get() != null || !consumerOptional.get().isDeleted()) {
-            Consumer consumer1 = consumerOptional.orElse(null);
+        if (consumerOptional.isEmpty()) return false;
+        if (!consumerOptional.get().isDeleted()) {
+            Consumer consumer1 = consumerOptional.get();
             consumer1.setId(consumer.getId());
             consumer1.setName(consumer.getName());
             consumer1.setPassWord(consumer.getPassWord());
@@ -208,21 +209,19 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public boolean updateUserPicture(Consumer consumer) throws ConsumerException {
         if (consumer.getId() == null || consumer.getPortrait() == null) {
-            if (consumer.getId() == null)
-                throw new ConsumerException("更新头像缺失ID");
-            if (consumer.getPortrait() == null)
-                throw new ConsumerException("更新头像缺失路径");
+            if (consumer.getId() == null) throw new ConsumerException("更新头像缺失ID");
+            if (consumer.getPortrait() == null) throw new ConsumerException("更新头像缺失路径");
         }
-        Consumer consumer1 = consumerRepository.findById(consumer.getId()).get();
+        Optional<Consumer> consumerOptional = consumerRepository.findById(consumer.getId());
+        if (consumerOptional.isEmpty()) return false;
+        Consumer consumer1 = consumerOptional.get();
         consumer1.setPortrait(consumer.getPortrait());
         consumerRepository.save(consumer1);
         return true;
     }
 
     @Override
-    public List<Consumer> getAllUser() {
-        return consumerRepository.findAll();
-    }
+    public List<Consumer> getAllUser() { return consumerRepository.findAll(); }
 
     @Override
     public boolean removeById(long id) {

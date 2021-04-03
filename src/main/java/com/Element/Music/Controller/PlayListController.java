@@ -1,5 +1,6 @@
 package com.Element.Music.Controller;
 
+import com.Element.Music.Exception.PlaylistException;
 import com.Element.Music.Exception.SongException;
 import com.Element.Music.Model.DAO.MusicDAO.PlayList;
 import com.Element.Music.Model.DAO.MusicDAO.Song;
@@ -52,7 +53,7 @@ public class PlayListController {
     @ResponseBody
     @RequestMapping("/getAll")
     public Object getAllPlayList() {
-        return  playListService.getAllPlaylsit();
+        return  playListService.getAllPlaylist();
     }
 
     @ResponseBody
@@ -66,15 +67,14 @@ public class PlayListController {
 
         PlayList playlistRes = playListService.addPlaylist(name, description, songId, image);
         if (playlistRes != null) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "新建成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "新建失败");
         }
         return jsonObject;
     }
-
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deletePlayList(HttpServletRequest req) {
@@ -82,10 +82,10 @@ public class PlayListController {
         JSONObject jsonObject = new JSONObject();
         boolean deleteRes = playListService.deletePlayListById(Long.parseLong(id));
         if (deleteRes) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "删除成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "删除失败");
         }
         return jsonObject;
@@ -97,7 +97,7 @@ public class PlayListController {
         JSONObject jsonObject = new JSONObject();
 
         if (portraitFile.isEmpty()) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "文件上传失败！");
             return jsonObject;
         }
@@ -121,24 +121,19 @@ public class PlayListController {
             PlayList playlist = PlayList.builder().build();
             playlist.setId(id);
             playlist.setRepresentImagePath(storePortraitPath);
-            boolean res = playListService.updateplayListPic(playlist);
+            boolean res = playListService.updatePlayListPic(playlist);
             if (res) {
-                jsonObject.put("code", 1);
+                jsonObject.put("code", 0);
                 jsonObject.put("pic", storePortraitPath);
                 jsonObject.put("msg", "上传成功");
-                return jsonObject;
             } else {
-                jsonObject.put("code", 0);
+                jsonObject.put("code", 1);
                 jsonObject.put("msg", "上传失败");
-                return jsonObject;
             }
-        } catch (IOException e) {
-            jsonObject.put("code", 0);
+        } catch (IOException | PlaylistException e) {
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "上传失败" + e.getMessage());
-            return jsonObject;
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
-
 }

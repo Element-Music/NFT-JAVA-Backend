@@ -32,24 +32,24 @@ public class OrderController {
         JSONObject jsonObject = new JSONObject();
         String consumerId = req.getParameter("consumerId").trim();
         String songId = req.getParameter("songId").trim();
-        if(consumerId.equals("") || songId.equals("")){
-            jsonObject.put("code", 0);
+        if (consumerId.equals("") || songId.equals("")){
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "歌曲或用户为空");
             return jsonObject;
         }
+        //TODO: use enum for "res"
         int res = orderService.addNewOrder(Long.parseLong(songId), Long.parseLong(consumerId));
-        if(res == -1){
-            jsonObject.put("code", 0);
+        if (res == -1){
+            jsonObject.put("code", 2);
             jsonObject.put("msg", "余额不足");
-        }else if(res == -2){
-            jsonObject.put("code", 0);
+        } else if (res == -2){
+            jsonObject.put("code", 3);
             jsonObject.put("msg", "无法新增订单");
-        }else if(res == 1){
-            jsonObject.put("code", 1);
+        } else if (res == 1){
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "交易成功");
         }
         return jsonObject;
-
     }
 
 //    @RequestMapping(value = "/getOrderById", method = RequestMethod.GET)
@@ -59,7 +59,7 @@ public class OrderController {
 //    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Object allOrder(HttpServletRequest req) {
+    public Object allOrder() {
         return orderService.getAllOrder();
     }
 

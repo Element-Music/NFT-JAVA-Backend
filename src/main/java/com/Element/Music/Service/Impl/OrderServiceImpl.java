@@ -44,8 +44,7 @@ public class OrderServiceImpl implements OrderService {
             workerId = Long.parseLong(ip.replaceAll("\\.", ""));
             workerId = workerId % 32; //因为占用5位，模32
         }
-        OrderId orderId = new OrderId(workerId, datacenterId);
-        return orderId;
+        return new OrderId(workerId, datacenterId);
     }
 
     @Override
@@ -66,14 +65,10 @@ public class OrderServiceImpl implements OrderService {
 //        order.setSong(songService.getSongById(songId));
         order.setOrderCode(orderId.nextId());
         ConsumerOrder returnOrder = orderRepository.save(order);
-        if(returnOrder == null){
-            return -2; //Error Code: -2: 保存订单失败
-        }
         Purse consumerPurse = purseService.withdrawBalanceById(consumerId, songPrice.getShowPrice());
         if(consumerPurse == null) return -1; //用户余额不够
 //        Song purchasedSong = songPrice.getSong();
         consumerService.addToMySong(consumerId, songId);
-
         return 1; //新增订单成功
     }
 

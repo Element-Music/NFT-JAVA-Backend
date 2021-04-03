@@ -127,7 +127,7 @@ public class MusicianController {
 
         Musician musician = Musician.builder().description(description).build();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myBirth = new Date();
+        Date myBirth;
         try {
             myBirth = dateFormat.parse(birth);
         } catch (Exception e) {
@@ -200,9 +200,18 @@ public class MusicianController {
     }
 
     @RequestMapping(value = "/musicianPicture", method = RequestMethod.POST)
-    public String getMusicianPortrait(HttpServletRequest req) {
+    public Object getMusicianPortrait(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return musicianService.getMusicianPortrait(Long.parseLong(id));
+        String path = musicianService.getMusicianPortrait(Long.parseLong(id));
+        JSONObject jsonObject = new JSONObject();
+        if (path.equals("")) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "音乐人或其头像不存在");
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", path);
+        }
+        return jsonObject;
     }
 
     @RequestMapping(value = "/id/detail", method = RequestMethod.GET)

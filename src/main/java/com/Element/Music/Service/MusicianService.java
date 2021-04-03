@@ -12,8 +12,6 @@ public interface MusicianService {
 
     List<Musician> getMusicianByName(String name) throws MusicianException;
 
-    boolean deleteMusician(long id);
-
     boolean updateMusicianMsg(Musician musician) throws MusicianException;
 
     boolean updateSingerPic(Musician musician) throws MusicianException;

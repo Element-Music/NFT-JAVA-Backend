@@ -50,31 +50,30 @@ public class PlayListServiceImpl implements PlayListService {
     }
 
     @Override
-    public List<PlayList> getAllPlaylsit(){
+    public List<PlayList> getAllPlaylist(){
         return playlistRepository.findAll();
     }
 
     @Override
     public boolean deletePlayListById(Long id) {
         Optional<PlayList> playlistOptional = playlistRepository.findByIdAndDeletedIsFalse(id);
-        if (playlistOptional.orElse(null) != null) {
-            PlayList playlist = playlistOptional.orElse(null);
-            playlist.setDeleted(true);
-            playlistRepository.save(playlist);
-            return true;
-        }
-        return false;
+        if (playlistOptional.isEmpty()) return false;
+        PlayList playlist = playlistOptional.get();
+        playlist.setDeleted(true);
+        playlistRepository.save(playlist);
+        return true;
     }
 
     @Override
-    public boolean updateplayListPic(PlayList playlist) throws PlaylistException {
+    public boolean updatePlayListPic(PlayList playlist) throws PlaylistException {
         if (playlist == null || playlist.getRepresentImagePath() == null) {
             if (playlist == null)
                 throw new PlaylistException("更改图片接口缺失musician");
             else throw new PlaylistException("更改图片接口缺失portrait");
         }
         Optional<PlayList> playlistOptional = playlistRepository.findByIdAndDeletedIsFalse(playlist.getId());
-        if (playlistOptional.get() != null || playlistOptional.get().isDeleted() == false) {
+        if (playlistOptional.isEmpty()) return false;
+        if (!playlistOptional.get().isDeleted()) {
             PlayList playlist1 = playlistOptional.get();
             playlist1.setRepresentImagePath(playlist.getRepresentImagePath());
             playlistRepository.save(playlist1);

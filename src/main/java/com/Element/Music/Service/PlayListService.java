@@ -8,7 +8,7 @@ import java.util.List;
 public interface PlayListService {
     PlayList addPlaylist(String ListName, String description, String[] songId, String image);
     PlayList getPlaylistById(Long id);
-    List<PlayList> getAllPlaylsit();
+    List<PlayList> getAllPlaylist();
     boolean deletePlayListById(Long id);
-    boolean updateplayListPic(PlayList playlist) throws PlaylistException;
+    boolean updatePlayListPic(PlayList playlist) throws PlaylistException;
 }
