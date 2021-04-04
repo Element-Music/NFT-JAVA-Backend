@@ -62,24 +62,17 @@ public class ConsumerServiceImpl implements ConsumerService {
 //    }
 
     @Override
-    public Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (consumer.getPhoneNum() == null && consumer.getEmail() == null) {
-            throw new ConsumerException("absence of email and phoneNum");
-        } else if (consumerRepository.findByPhoneNum(consumer.getPhoneNum()) != null ||
-                consumerRepository.findByEmail(consumer.getEmail()) != null) {
-            return null;
-        } else if (!PaternUtil.isUserName(consumer.getName()) ||
-                (consumer.getPhoneNum().equals("") && !PaternUtil.isMobile(consumer.getPhoneNum())) ||
-                (consumer.getEmail().equals("") && !PaternUtil.isEmail(consumer.getEmail()))) {
-            if (consumer.getEmail().equals("") && !PaternUtil.isEmail(consumer.getEmail())) {
-                throw new ConsumerException("email is illegal");
-            } else {
-                throw new ConsumerException("userName is illegal");
-            }
+    public int addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        if (consumerRepository.findByEmail(consumer.getEmail()) != null) {
+            return 2;
+        } else if (!PaternUtil.isUserName(consumer.getName()) || !PaternUtil.isEmail(consumer.getEmail())) {
+            if (!PaternUtil.isEmail(consumer.getEmail()))  return 3;
+            else return 4;
         }
         String pwd = consumer.getPassWord();
         consumer.setPassWord(DigestUtils.md5DigestAsHex(pwd.getBytes()));
-        return consumerRepository.save(consumer);
+        consumerRepository.save(consumer);
+        return 0;
     }
 
     @Override

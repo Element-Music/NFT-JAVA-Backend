@@ -17,7 +17,7 @@ public interface ConsumerService {
 
 //    boolean verifyPasswdByEmail(String Email, String passWord) throws UnsupportedEncodingException;
 
-    Consumer addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException;
+    int addConsumer(Consumer consumer) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException;
 
     boolean addToWishlist(long consumerId, long songId);
 

@@ -55,45 +55,38 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         String username = req.getParameter("username").trim();
         String password = req.getParameter("password").trim();
-        String phoneNum = req.getParameter("phoneNum").trim();
+//        String phoneNum = req.getParameter("phoneNum").trim();
         String email = req.getParameter("email").trim();
 
-        if (username.equals("")) {
+        if (username.equals("") || email.equals("") || password.equals("")) {
             jsonObject.put("code", 1);
-            jsonObject.put("msg", "用户名或密码错误");
+            jsonObject.put("msg", "用户名、电邮或者密码为空");
             return jsonObject;
         }
         Consumer consumer = new Consumer();
 
         consumer.setName(username);
         consumer.setPassWord(password);
-        if (phoneNum.equals("")) consumer.setPhoneNum(null);
-        else consumer.setPhoneNum(phoneNum);
-
-        if (email.equals("")) consumer.setEmail(null);
-        else consumer.setEmail(email);
+        consumer.setEmail(email);
+//        if (phoneNum.equals("")) consumer.setPhoneNum(null);
+//        else consumer.setPhoneNum(phoneNum);
 
         consumer.setCreateTime(new Date());
         consumer.setUpdateTime(new Date());
-        Consumer addConsumerRes = consumerService.addConsumer(consumer);
+        int addConsumerRes = consumerService.addConsumer(consumer);
 
-//        Purse addPurseRes = null;
-
-        if (addConsumerRes != null) {
+        if (addConsumerRes == 0) {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "注册成功");
-
-
-//            PurseController purseController = new PurseController(purseService);
-//
-//            Object initializePurseRes = purseController.initializeBalance(addConsumerRes);
-//            System.out.println("addConsumerRes");
-//            System.out.println(addConsumerRes);
-//            System.out.println("initializePurseRes");
-//            System.out.println(initializePurseRes);
-        } else {
-            jsonObject.put("code", 1);
+        } else if (addConsumerRes == 2){
+            jsonObject.put("code", 2);
             jsonObject.put("msg", "注册失败,该用户已存在");
+        } else if (addConsumerRes == 3){
+            jsonObject.put("code", 3);
+            jsonObject.put("msg", "电邮格式不正确");
+        } else if (addConsumerRes == 4){
+            jsonObject.put("code", 4);
+            jsonObject.put("msg", "用户名格式不正确");
         }
         return jsonObject;
     }
