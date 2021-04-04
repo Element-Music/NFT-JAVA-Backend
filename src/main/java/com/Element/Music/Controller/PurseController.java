@@ -36,16 +36,16 @@ public class PurseController {
         String id = req.getParameter("id").trim();
         String addValue = req.getParameter("addValue").trim();
         if (id.equals("") || addValue.equals("")) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 2);
             jsonObject.put("msg", "用户名或增值额为空");
             return jsonObject;
         }
         Purse addBalanceRes = purseService.addBalanceById(Long.parseLong(id), Double.parseDouble(addValue));
         if (addBalanceRes != null) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "增值成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "增值失败");
         }
         return jsonObject;
@@ -58,20 +58,18 @@ public class PurseController {
         String id = req.getParameter("id").trim();
         String withdrawValue = req.getParameter("withdrawValue").trim();
         if (id.equals("") || withdrawValue.equals("")) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 2);
             jsonObject.put("msg", "用户名或支付额为空");
             return jsonObject;
         }
         Purse addBalanceRes = purseService.withdrawBalanceById(Long.parseLong(id), Double.parseDouble(withdrawValue));
         if (addBalanceRes != null) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "支付成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "支付失败");
         }
         return jsonObject;
     }
-
-
 } 

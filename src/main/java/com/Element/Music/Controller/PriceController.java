@@ -42,18 +42,19 @@ public class PriceController {
         String rate = req.getParameter("rate").trim();
 
         if (id.equals("")) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 2);
             jsonObject.put("msg", "用户名为空");
             return jsonObject;
         }
 
-        Price addPriceRes = priceService.initializePrice(Long.parseLong(id), StringUtils.isNotBlank(originalPrice) ? Double.parseDouble(originalPrice) : 0.0,
+        Price addPriceRes = priceService.initializePrice(Long.parseLong(id), StringUtils.isNotBlank(originalPrice) ?
+                        Double.parseDouble(originalPrice) : 0.0,
                 StringUtils.isNotBlank(rate) ? Double.parseDouble(rate) : 0.15);
         if (addPriceRes != null) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "增加歌曲价格成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "增加歌曲价格失败");
         }
         return jsonObject;

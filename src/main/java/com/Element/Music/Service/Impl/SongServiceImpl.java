@@ -33,13 +33,11 @@ public class SongServiceImpl implements SongService {
     @Override
     public boolean deleteSong(long id) {
         Optional<Song> songOptional = songRepository.findById(id);
-        if (songOptional.orElse(null) != null) {
-            Song song = songOptional.orElse(null);
-            song.setDeleted(true);
-            songRepository.save(song);
-            return true;
-        }
-        return false;
+        if (songOptional.isEmpty()) return false;
+        Song song = songOptional.get();
+        song.setDeleted(true);
+        songRepository.save(song);
+        return true;
     }
 
     @Override
@@ -69,17 +67,16 @@ public class SongServiceImpl implements SongService {
         if (song == null)
             throw new SongException("更改歌曲接口缺失song");
         Optional<Song> songOptional = songRepository.findById(song.getId());
-        if (songOptional.get() != null || !songOptional.get().isDeleted()) {
-            Song song1 = songOptional.orElse(null);
-            song1.setId(song.getId());
-            song1.setSongName(song.getSongName());
-            song1.setMusician(song.getMusician());
-            song1.setDescription(song.getDescription());
-            song1.setLyric(song.getLyric());
-            songRepository.save(song1);
-            return true;
-        }
-        return false;
+        if (songOptional.isEmpty()) return false;
+        if (songOptional.get().isDeleted()) return false;
+        Song song1 = songOptional.get();
+        song1.setId(song.getId());
+        song1.setSongName(song.getSongName());
+        song1.setMusician(song.getMusician());
+        song1.setDescription(song.getDescription());
+        song1.setLyric(song.getLyric());
+        songRepository.save(song1);
+        return true;
     }
 
 //    @Override
@@ -96,46 +93,39 @@ public class SongServiceImpl implements SongService {
             else throw new SongException("更改图片接口缺失represent_image_path");
         }
         Optional<Song> songOptional = songRepository.findById(song.getId());
-        if (songOptional.orElse(null) != null || !songOptional.orElse(null).isDeleted()) {
-            Song song1 = songOptional.orElse(null);
-            song1.setRepresentImagePath(song.getRepresentImagePath());
-            songRepository.save(song1);
-            return true;
-        }
-        return false;
+        if (songOptional.isEmpty()) return false;
+        if (songOptional.get().isDeleted()) return false;
+        Song song1 = songOptional.orElse(null);
+        song1.setRepresentImagePath(song.getRepresentImagePath());
+        songRepository.save(song1);
+        return true;
     }
 
     @Override
     public boolean updateSongUrl(Song song) throws SongException {
         if (song == null || song.getUrl() == null) {
-            if (song == null)
-                throw new SongException("更改URL接口缺失song");
+            if (song == null) throw new SongException("更改URL接口缺失song");
             else throw new SongException("更改URL接口缺失url");
         }
         Optional<Song> songOptional = songRepository.findById(song.getId());
-        if (songOptional.orElse(null) != null || songOptional.orElse(null).isDeleted() == false) {
-            Song song1 = songOptional.orElse(null);
-            song1.setUrl(song.getUrl());
-            songRepository.save(song1);
-            return true;
-        }
-        return false;
+        if (songOptional.isEmpty()) return false;
+        if (songOptional.get().isDeleted()) return false;
+        Song song1 = songOptional.get();
+        song1.setUrl(song.getUrl());
+        songRepository.save(song1);
+        return true;
     }
 
     @Override
     public Musician getMusicianById(long id) {
-        Musician musician = musicianService.getMusicianById(id);
-        return musician;
+        return musicianService.getMusicianById(id);
     }
 
     @Override
     public String getSongPic(long id) {
-        Song song = songRepository.findById(id).get();
-        if (song == null)
-            return "这首歌不存在，发错id啦同学";
-        String songPicPath = song.getRepresentImagePath();
-        if (songPicPath == null || songPicPath.length() == 0)
-            return "抱歉同学，这首歌的图片可能有某个傻瓜忘了存";
-        return songPicPath;
+        Optional<Song> optionalSong = songRepository.findById(id);
+        if (optionalSong.isEmpty()) return "";
+        Song song = optionalSong.get();
+        return song.getRepresentImagePath();
     }
 }

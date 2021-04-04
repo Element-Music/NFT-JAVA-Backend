@@ -76,7 +76,7 @@ public class SongController {
         String lyric = req.getParameter("lyric").trim();
 
         if (mpfile.isEmpty()) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "音乐上传失败！");
             return jsonObject;
         }
@@ -96,21 +96,18 @@ public class SongController {
                     .songName(songName).lyric(lyric).url(storeUrlPath).representImagePath(pic).build();
             Song res = songService.addSong(song);
             if (res != null) {
-                jsonObject.put("code", 1);
+                jsonObject.put("code", 0);
                 jsonObject.put("urlPath", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
             } else {
-                jsonObject.put("code", 0);
+                jsonObject.put("code", 1);
                 jsonObject.put("msg", "上传失败");
             }
-            return jsonObject;
         } catch (Exception e) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "上传失败" + e.getMessage());
-            return jsonObject;
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    返回所有歌曲
@@ -124,7 +121,7 @@ public class SongController {
     @RequestMapping(value = "/songId/detail", method = RequestMethod.GET)
     public Object songOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return songService.getSongById(Integer.parseInt(id));
+        return songService.getSongById(Long.parseLong(id));
     }
 
     //    //    返回指定歌手ID的歌曲
@@ -152,7 +149,15 @@ public class SongController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Object deleteSong(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return songService.deleteSong(Integer.parseInt(id));
+        JSONObject jsonObject = new JSONObject();
+        if (!songService.deleteSong(Long.parseLong(id))) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "删除失败");
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "删除成功");
+        }
+        return jsonObject;
     }
 
     //    更新歌曲信息
@@ -167,17 +172,17 @@ public class SongController {
         String description = req.getParameter("description").trim();
         String lyric = req.getParameter("lyric").trim();
 
-        Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).description(description)
-                .songName(songName).lyric(lyric).build();
+        Song song = Song.builder().musician(songService.getMusicianById(Long.parseLong(musicianId))).
+                description(description).songName(songName).lyric(lyric).build();
         song.setId(Long.parseLong(id));
         song.setLyric(lyric);
 
         boolean res = songService.updateSong(song);
         if (res) {
-            jsonObject.put("code", 1);
+            jsonObject.put("code", 0);
             jsonObject.put("msg", "修改成功");
         } else {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "修改失败");
         }
         return jsonObject;
@@ -190,7 +195,7 @@ public class SongController {
         JSONObject jsonObject = new JSONObject();
 
         if (urlFile.isEmpty()) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "音乐上传失败！");
             return jsonObject;
         }
@@ -214,22 +219,18 @@ public class SongController {
             song.setId(id);
             boolean res = songService.updateSongPic(song);
             if (res) {
-                jsonObject.put("code", 1);
+                jsonObject.put("code", 0);
                 jsonObject.put("portraitPath", storeImagePath);
                 jsonObject.put("msg", "上传成功");
-                return jsonObject;
             } else {
-                jsonObject.put("code", 0);
+                jsonObject.put("code", 1);
                 jsonObject.put("msg", "上传失败");
-                return jsonObject;
             }
         } catch (Exception e) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "上传失败" + e.getMessage());
-            return jsonObject;
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
 
     //    更新歌曲URL
@@ -240,7 +241,7 @@ public class SongController {
         JSONObject jsonObject = new JSONObject();
 
         if (urlFile.isEmpty()) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "音乐上传失败！");
             return jsonObject;
         }
@@ -260,45 +261,50 @@ public class SongController {
             song.setUrl(storeUrlPath);
             boolean res = songService.updateSongUrl(song);
             if (res) {
-                jsonObject.put("code", 1);
+                jsonObject.put("code", 0);
                 jsonObject.put("urlPath", storeUrlPath);
                 jsonObject.put("msg", "上传成功");
-                return jsonObject;
             } else {
-                jsonObject.put("code", 0);
+                jsonObject.put("code", 1);
                 jsonObject.put("msg", "上传失败");
-                return jsonObject;
             }
         } catch (Exception e) {
-            jsonObject.put("code", 0);
+            jsonObject.put("code", 1);
             jsonObject.put("msg", "上传失败" + e.getMessage());
-            return jsonObject;
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
 
-    @RequestMapping(value = "/download")
-    public void download(@RequestParam("fileName") String filename) throws IOException {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletResponse response = requestAttributes.getResponse();
-        String type = new MimetypesFileTypeMap().getContentType(filename);
-        response.setHeader("Content-type", type);
-        String header = new String(filename.getBytes("utf-8"), "iso-8859-1");
-        response.setHeader("Content-Disposition", "attachment;filename=" + header);
-        FileUtils.download(filename, response);
-    }
+//    @RequestMapping(value = "/download")
+//    public void download(@RequestParam("fileName") String filename) throws IOException {
+//        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletResponse response = requestAttributes.getResponse();
+//        String type = new MimetypesFileTypeMap().getContentType(filename);
+//        response.setHeader("Content-type", type);
+//        String header = new String(filename.getBytes("utf-8"), "iso-8859-1");
+//        response.setHeader("Content-Disposition", "attachment;filename=" + header);
+//        FileUtils.download(filename, response);
+//    }
 
     @RequestMapping(value = "/songPicture")
-    public String getSongPicture(HttpServletRequest req) {
+    public Object getSongPicture(HttpServletRequest req) {
         String id = req.getParameter("id");
-        return songService.getSongPic(Long.parseLong(id));
+        String path = songService.getSongPic(Long.parseLong(id));
+        JSONObject jsonObject = new JSONObject();
+        if (path == null || path.equals("")) {
+            jsonObject.put("code", 1);
+            jsonObject.put("msg", "id或者图片错误");
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", path);
+        }
+        return jsonObject;
     }
 
     @ResponseBody
     @RequestMapping(value = "/songsByMusicianId")
     public Object getSongsByMusicianId(HttpServletRequest req){
         String id = req.getParameter("id");
-        return songService.getSongsByMusician(Long.valueOf(id));
+        return songService.getSongsByMusician(Long.parseLong(id));
     }
 }

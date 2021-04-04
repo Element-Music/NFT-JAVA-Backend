@@ -28,23 +28,18 @@ public class PriceServiceImpl implements PriceService {
         price.setSong(curSong);
         price.setOriginalPrice(originalPrice);
         price.setRate(rate);
-        Price initializeRes = priceRepository.save(price);
-        return initializeRes;
+        return priceRepository.save(price);
     }
-
 
     @Override
     public Price getPriceById(Long songId){
         return priceRepository.findBySongAndDeletedIsFalse(songService.getSongById(songId));
     }
 
-
     @Override
     public Double getDisplayPriceById(Long songId){
         Price returnPrice = priceRepository.findBySongAndDeletedIsFalse(songService.getSongById(songId));
-        if(returnPrice == null){
-            return -1.0;
-        }
+        if (returnPrice == null) return -1.0;
         return returnPrice.getShowPrice();
     }
 
