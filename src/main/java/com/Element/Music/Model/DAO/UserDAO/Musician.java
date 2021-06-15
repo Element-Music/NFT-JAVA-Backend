@@ -1,14 +1,9 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
-
-import com.Element.Music.Emun.Genre;
-import com.Element.Music.Model.DAO.MusicDAO.Album;
-import com.Element.Music.Model.DAO.MusicDAO.Song;
+import com.Element.Music.Model.DAO.BaseEntity;
+import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,29 +16,13 @@ import java.util.Set;
 @Table(name = "musician")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Musician extends User implements Serializable {
+public class Musician extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 7659253546867155512L;
 
-    @Column(nullable = false)
-    private Genre genre;
+    private boolean AI;
 
-    @Column(nullable = false)
-    private String name;
-
-    @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "musician")
-    private Set<Song> songs;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Album> albums;
-
-    private String weibo;
-
-    private String description;
-
-    private String representativeWork;
-
-    private int liked;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"musician"})
+    private Consumer consumer;
 }

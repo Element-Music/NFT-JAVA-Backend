@@ -1,10 +1,10 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
-import com.Element.Music.Model.DAO.MusicDAO.Song;
-import com.Element.Music.Model.DAO.TradeDAO.ConsumerOrder;
-import com.Element.Music.Model.DAO.TradeDAO.Purse;
+import com.Element.Music.Model.DAO.BaseEntity;
+import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.apache.tomcat.jni.Address;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,32 +16,20 @@ import java.util.Set;
 @Table(name = "consumer")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(value = {"collections"})
-public class Consumer extends User implements Serializable {
 
+public class Consumer extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -2214230518390003400L;
 
-    private String nickName;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Song> wishlist;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"price"})
-    private Set<Song> mySongs;
-
     @NonNull
-    private String passWord;
+    private String accountId;
+
+    private String nickname;
+
+    private String email;
+
+    private String portrait;
 
     @OneToOne(mappedBy = "consumer")
     @JsonIgnoreProperties({"consumer"})
-    private Purse purse;
-
-//    @OneToOne(mappedBy = "consumer")
-//    @JsonIgnoreProperties({"consumer"})
-//    private ConsumerOrder consumerOrder;
-
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<Song> playList;
-
+    private Musician musician;
 }

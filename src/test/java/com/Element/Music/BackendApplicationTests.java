@@ -2,11 +2,8 @@ package com.Element.Music;
 
 import com.Element.Music.Emun.Genre;
 import com.Element.Music.Emun.Sex;
-import com.Element.Music.Model.DAO.MusicDAO.Song;
-import com.Element.Music.Model.DAO.TradeDAO.Price;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.Element.Music.Service.MusicianService;
-import com.Element.Music.Service.SongService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,8 +18,6 @@ class BackendApplicationTests {
     @Autowired
     private MusicianService musicianService;
 
-    @Autowired
-    private SongService songService;
 
     // @Test
     // void contextLoads() {
@@ -49,4 +44,5 @@ class BackendApplicationTests {
 //        Price price = songService.getSongById(4).getPrice();
 //        System.out.println("原价是" + price.getOriginalPrice());
 //    }
+
 }

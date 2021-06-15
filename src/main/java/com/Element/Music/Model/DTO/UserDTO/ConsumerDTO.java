@@ -1,7 +1,5 @@
 package com.Element.Music.Model.DTO.UserDTO;
 
-import com.Element.Music.Model.DAO.TradeDAO.ConsumerOrder;
-import com.Element.Music.Model.DTO.MusicDTO.SongDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,9 +12,4 @@ public class ConsumerDTO {
 
     private String nickName;
 
-    private Set<SongDTO> collections;
-
-    private Set<SongDTO> mySongs;
-
-    private Set<ConsumerOrder> orders;
 }

@@ -1,8 +1,5 @@
 package com.Element.Music.Controller;
 
-//import com.Element.Music.Emun.Sex;
-
-import com.Element.Music.Emun.Sex;
 import com.Element.Music.Exception.ConsumerException;
 import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Service.ConsumerService;
@@ -20,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
@@ -30,14 +25,15 @@ public class ConsumerController {
 
     private final ConsumerService consumerService; //null
 
-
     @Value("${consumer_portrait.path}")
     private String consumerPortrait;
 
     @Value("${user.path}")
     private String userPath;
 
-    public ConsumerController(ConsumerService consumerService) { this.consumerService = consumerService; }
+    public ConsumerController(ConsumerService consumerService) {
+        this.consumerService = consumerService;
+    }
 
     @Configuration
     public class MyPicConfig implements WebMvcConfigurer {
@@ -48,194 +44,239 @@ public class ConsumerController {
         }
     }
 
+    private JSONObject checkAccountIdNotVoid(String accountId) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", 1);
+        jsonObject.put("msg", "钱包地址为空");
+        return jsonObject;
+    }
+
+
+    private int addUserHelper(String accountId) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        JSONObject jsonObject = new JSONObject();
+        Consumer consumer = new Consumer();
+        consumer.setAccountId(accountId);
+        consumer.setEmail(null);
+        String portraitPath = "/img/consumerPic/1623567820637default_profile.jpg";
+        consumer.setPortrait(portraitPath);
+        consumer.setNickname("Unnamed");
+        consumer.setCreateTime(new Date());
+        consumer.setUpdateTime(new Date());
+        return consumerService.addConsumer(consumer);
+    }
+
+
     //    添加用户
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Object addUser(HttpServletRequest req) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        String accountId = req.getParameter("accountId").trim();
         JSONObject jsonObject = new JSONObject();
-        String username = req.getParameter("username").trim();
-        String password = req.getParameter("password").trim();
-//        String phoneNum = req.getParameter("phoneNum").trim();
-        String email = req.getParameter("email").trim();
-
-        if (username.equals("") || email.equals("") || password.equals("")) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "用户名、电邮或者密码为空");
-            return jsonObject;
+        if (accountId.equals("")) {
+            return checkAccountIdNotVoid(accountId);
         }
-        Consumer consumer = new Consumer();
-
-        consumer.setName(username);
-        consumer.setPassWord(password);
-        consumer.setEmail(email);
-//        if (phoneNum.equals("")) consumer.setPhoneNum(null);
-//        else consumer.setPhoneNum(phoneNum);
-
-        consumer.setCreateTime(new Date());
-        consumer.setUpdateTime(new Date());
-        int addConsumerRes = consumerService.addConsumer(consumer);
-
+        int addConsumerRes = addUserHelper(accountId);
         if (addConsumerRes == 0) {
             jsonObject.put("code", 0);
             jsonObject.put("msg", "注册成功");
-        } else if (addConsumerRes == 2){
+        } else if (addConsumerRes == 1) {
             jsonObject.put("code", 2);
-            jsonObject.put("msg", "注册失败,该用户已存在");
-        } else if (addConsumerRes == 3){
-            jsonObject.put("code", 3);
-            jsonObject.put("msg", "电邮格式不正确");
-        } else if (addConsumerRes == 4){
-            jsonObject.put("code", 4);
-            jsonObject.put("msg", "用户名格式不正确");
+            jsonObject.put("msg", "该用户钱包已存在");
         }
         return jsonObject;
     }
 
-    //    判断是否登录成功
+
+    //    更改用户邮箱
     @ResponseBody
-    @Deprecated
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Object login(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
-
+    @RequestMapping(value = "/update/email", method = RequestMethod.POST)
+    public Object updateEmail(HttpServletRequest req) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
         JSONObject jsonObject = new JSONObject();
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        int res = consumerService.verifyPasswdByUser(username, password);
+        String accountId = req.getParameter("accountId").trim();
+        String email = req.getParameter("email").trim();
 
-        if (res == 0) {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "登录成功");
-            Consumer loggedInConusmer = consumerService.getConsumerInfoOnceLogin(username);
-            jsonObject.put("username", username);
-            jsonObject.put("collection", loggedInConusmer.getMySongs());
-            jsonObject.put("balance", loggedInConusmer.getPurse().getBalance());
-//            Long consumerId = loggedInConusmer.getId();
-            jsonObject.put("wishlist", loggedInConusmer.getWishlist());
-            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-            session.setAttribute("username", username);
-            String sessionId = session.getId();
-            jsonObject.put("sessionId", sessionId);
-        } else if (res == 1) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "用户名格式错误");
-        } else if (res == 2) {
-            jsonObject.put("code", 2);
-            jsonObject.put("msg", "该账户未注册");
-        } else {
+        if (accountId.equals("") || email.equals("")) {
+            if (accountId.equals("")) {
+                jsonObject = checkAccountIdNotVoid(accountId);
+            } else {
+                jsonObject.put("code", 2);
+                jsonObject.put("msg", "用户邮箱为空");
+            }
+            return jsonObject;
+        }
+        int res = consumerService.updateConsumerEmail(email, accountId);
+        if(res == 1) {
             jsonObject.put("code", 3);
-            jsonObject.put("msg", "用户名和密码不匹配");
-        }
-        return jsonObject;
-    }
-
-    @RequestMapping(value = "/addToWishlist", method = RequestMethod.POST)
-    public Object addToWishlist(HttpServletRequest req) {
-        String songId = req.getParameter("songId");
-        String consumerId = req.getParameter("consumerId");
-        JSONObject jsonObject = new JSONObject();
-        if (!consumerService.addToWishlist(Long.parseLong(consumerId), Long.parseLong(songId))) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "添加失败");
-        } else {
+            jsonObject.put("msg", "用户邮箱已被注册");
+        }else if(res == 2) {
+            jsonObject.put("code", 4);
+            jsonObject.put("msg", "该用户不存在");
+        }else if(res == 0) {
             jsonObject.put("code", 0);
-            jsonObject.put("msg", "添加成功");
+            jsonObject.put("msg", "更改邮箱成功");
+        }else{
+            jsonObject.put("code", 5);
+            jsonObject.put("msg", "更改邮箱失败，系统错误");
         }
         return jsonObject;
     }
 
-    @RequestMapping(value = "/removeFromWishlist", method = RequestMethod.POST)
-    public Object removeFromWishlist(HttpServletRequest req) {
-        String songId = req.getParameter("songId");
-        String consumerId = req.getParameter("consumerId");
-        consumerService.removeFromWishlist(Long.parseLong(consumerId), Long.parseLong(songId));
-        return consumerService.getWishlist(Long.parseLong(consumerId));
+
+    //    更改用户昵称
+    @ResponseBody
+    @RequestMapping(value = "/update/nickname", method = RequestMethod.POST)
+    public Object updateNickname(HttpServletRequest req) throws ConsumerException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        JSONObject jsonObject = new JSONObject();
+        String accountId = req.getParameter("accountId").trim();
+        String nickname = req.getParameter("nickname").trim();
+
+        if (accountId.equals("") || nickname.equals("")) {
+            if (accountId.equals("")) {
+                jsonObject = checkAccountIdNotVoid(accountId);
+            } else {
+                jsonObject.put("code", 2);
+                jsonObject.put("msg", "用户昵称为空");
+            }
+            return jsonObject;
+        }
+        int res = consumerService.updateConsumerNickname(nickname, accountId);
+        if(res == 1) {
+            jsonObject.put("code", 3);
+            jsonObject.put("msg", "用户昵称已被注册");
+        }else if(res == 2) {
+            jsonObject.put("code", 4);
+            jsonObject.put("msg", "该用户不存在");
+        }else if(res == 0) {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "更改昵称成功");
+        }else{
+            jsonObject.put("code", 5);
+            jsonObject.put("msg", "更改昵称失败，系统错误");
+        }
+        return jsonObject;
     }
 
-    @RequestMapping(value = "/getWishlist", method = RequestMethod.GET)
-    public Object getWishlist(HttpServletRequest req) {
-        String consumerId = req.getParameter("id");
-        return consumerService.getWishlist(Long.parseLong(consumerId));
+
+    //    更新用户头像
+    @ResponseBody
+    @RequestMapping(value = "/update/portrait", method = RequestMethod.POST)
+    public Object updateUserPic(@RequestParam("file") MultipartFile pictureFile, @RequestParam("accountId") String accountId) {
+        //TODO: wrap into global function to reduce duplicity
+        JSONObject jsonObject = new JSONObject();
+
+        if (accountId.equals("") || pictureFile.isEmpty()) {
+            if (accountId.equals("")) {
+                jsonObject = checkAccountIdNotVoid(accountId);
+            }
+            if (pictureFile.isEmpty()) {
+                jsonObject.put("code", 2);
+                jsonObject.put("msg", "用户头像为空！");
+            }
+            return jsonObject;
+        }
+
+        String fileName = System.currentTimeMillis() + pictureFile.getOriginalFilename();
+        String filePath = userPath + "img";
+        File file1 = new File(filePath);
+        if (!file1.exists()) {
+            file1.mkdir();
+        }
+        filePath += System.getProperty("file.separator") + "consumerPic";
+        File file2 = new File(filePath);
+        if (!file2.exists()) {
+            file2.mkdir();
+        }
+
+        File dest = new File(filePath + System.getProperty("file.separator") + fileName);
+        String portraitPath = "/img/consumerPic/" + fileName;
+        try {
+            pictureFile.transferTo(dest);
+            boolean res = consumerService.updateConsumerPicture(portraitPath, accountId);
+            if (res) {
+                jsonObject.put("code", 0);
+                jsonObject.put("portrait", portraitPath);
+                jsonObject.put("msg", "上传成功");
+            } else {
+                jsonObject.put("code", 3);
+                jsonObject.put("msg", "上传失败");
+            }
+        } catch (IOException | ConsumerException e) {
+            jsonObject.put("code", 3);
+            jsonObject.put("msg", "上传失败" + e.getMessage());
+        }
+        return jsonObject;
     }
 
-    @RequestMapping(value = "/getCollection", method = RequestMethod.GET)
-    public Object getCollection(HttpServletRequest req) {
-        String consumerId = req.getParameter("id");
-        return consumerService.getMySong(Long.parseLong(consumerId));
-    }
 
     //    返回指定ID的用户
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail/id", method = RequestMethod.GET)
     public Object userOfId(HttpServletRequest req) {
         String id = req.getParameter("id");
         return consumerService.getConsumerByID(Long.parseLong(id));
     }
 
-//    @ResponseBody
-//    @Deprecated
-//    @RequestMapping(value = "/login/username", method = RequestMethod.POST)
-//    public Object userNameLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
-//
-//        JSONObject jsonObject = new JSONObject();
-//        String username = req.getParameter("username");
-//        String password = req.getParameter("password");
-//        boolean res = consumerService.verifyPasswdByUserName(username, password);
-//
-//        if (res) {
-//            jsonObject.put("code", 1);
-//            jsonObject.put("msg", "登录成功");
-//            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-//            session.setAttribute("username", username);
-//            return jsonObject;
-//        } else {
-//            jsonObject.put("code", 0);
-//            jsonObject.put("msg", "用户名或密码错误");
-//            return jsonObject;
-//        }
-//    }
-//
-//
-//
-//    @ResponseBody
-//    @RequestMapping(value = "/login/phoneNum", method = RequestMethod.POST)
-//    public Object phoneNumLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
-//        JSONObject jsonObject = new JSONObject();
-//        String phoneNum = req.getParameter("phoneNum");
-//        String password = req.getParameter("password");
-//        boolean res = consumerService.verifyPasswdByPhoneNum(phoneNum, password);
-//
-//        if (res) {
-//            jsonObject.put("code", 1);
-//            jsonObject.put("msg", "登录成功");
-//            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-//            session.setAttribute("phoneNum", phoneNum);
-//            return jsonObject;
-//        } else {
-//            jsonObject.put("code", 0);
-//            jsonObject.put("msg", "用户名或密码错误");
-//            return jsonObject;
-//        }
-//    }
-//
-//    @ResponseBody
-//    @RequestMapping(value = "/login/email", method = RequestMethod.POST)
-//    public Object emailLogin(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException {
-//        JSONObject jsonObject = new JSONObject();
-//        String email = req.getParameter("email");
-//        String password = req.getParameter("password");
-//        boolean res = consumerService.verifyPasswdByEmail(email, password);
-//
-//        if (res) {
-//            jsonObject.put("code", 1);
-//            jsonObject.put("msg", "登录成功");
-//            //jsonObject.put("userMsg", consumerService.loginStatus(username));
-//            session.setAttribute("email", email);
-//            return jsonObject;
-//        } else {
-//            jsonObject.put("code", 0);
-//            jsonObject.put("msg", "用户名或密码错误");
-//            return jsonObject;
-//        }
-//    }
+
+    //    返回指定accountId的用户
+    @RequestMapping(value = "/detail/accountId", method = RequestMethod.GET)
+    public Object userOfAccountId(HttpServletRequest req) {
+        JSONObject jsonObject = new JSONObject();
+        String accountId = req.getParameter("accountId");
+        if (accountId.equals("")) {
+            jsonObject = checkAccountIdNotVoid(accountId);
+            return jsonObject;
+        }
+        Consumer consumer = consumerService.getConumserByAccountId(accountId);
+        if (consumer == null) {
+            jsonObject.put("code", 2);
+            jsonObject.put("msg", "该用户不存在");
+            return jsonObject;
+        } else {
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "成功返回该用户");
+            jsonObject.put("nickname", consumer.getNickname());
+            jsonObject.put("portrait", consumer.getPortrait());
+            jsonObject.put("email", consumer.getEmail());
+            jsonObject.put("id", consumer.getId());
+        }
+        return jsonObject;
+    }
+
+
+    //    判断是否登录成功
+    @ResponseBody
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Object login(HttpServletRequest req, HttpSession session) throws UnsupportedEncodingException, NoSuchAlgorithmException, ConsumerException {
+        String accountId = req.getParameter("accountId");
+        JSONObject jsonObject = new JSONObject();
+        if (accountId.equals("")) {
+            return checkAccountIdNotVoid(accountId);
+        }
+        Consumer consumer = consumerService.getConumserByAccountId(accountId);
+        if (consumer == null) {
+            int addConsumerRes = addUserHelper(accountId);
+            if(addConsumerRes == 0){
+                consumer = consumerService.getConumserByAccountId(accountId);
+                if (consumer == null) {
+                    jsonObject.put("code", 3);
+                    jsonObject.put("msg", "该用户不存在");
+                    return jsonObject;
+                }
+            }else{
+                jsonObject.put("code", 2);
+                jsonObject.put("msg", "添加新用户失败");
+            }
+        }
+        jsonObject.put("code", 0);
+        jsonObject.put("msg", "成功登录该用户");
+        jsonObject.put("nickname", consumer.getNickname());
+        jsonObject.put("portrait", consumer.getPortrait());
+        jsonObject.put("email", consumer.getEmail());
+        jsonObject.put("id", consumer.getId());
+        String sessionId = session.getId();
+        jsonObject.put("sessionId", sessionId);
+        return jsonObject;
+
+    }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Object logout(HttpServletRequest request) {
@@ -254,7 +295,9 @@ public class ConsumerController {
 //    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Object allSinger() { return consumerService.getAllUser(); }
+    public Object allSinger() {
+        return consumerService.getAllUser();
+    }
 
     //    删除用户
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -268,103 +311,7 @@ public class ConsumerController {
         jsonObject.put("code", 0);
         jsonObject.put("msg", "删除用户成功");
     }
-
-    //    更新用户信息
-    @ResponseBody
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Object updateUserMsg(HttpServletRequest req) throws ConsumerException {
-        JSONObject jsonObject = new JSONObject();
-        String id = req.getParameter("id").trim();
-        String username = req.getParameter("username").trim();
-        String password = req.getParameter("password").trim();
-        String sex = req.getParameter("sex").trim();
-        String phoneNum = req.getParameter("phoneNum").trim();
-        String email = req.getParameter("email").trim();
-        String birth = req.getParameter("birth").trim();
-        String location = req.getParameter("location").trim();
-        String portrait = req.getParameter("portrait").trim();
-
-        if (username.equals("")) {
-            jsonObject.put("code", 2);
-            jsonObject.put("msg", "用户名或密码错误");
-            return jsonObject;
-        }
-        Consumer consumer = new Consumer();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myBirth;
-        try {
-            myBirth = dateFormat.parse(birth);
-        } catch (Exception e) {
-            jsonObject.put("code", 3);
-            jsonObject.put("msg", "生日日期格式错误");
-            return jsonObject;
-        }
-        consumer.setId(Long.parseLong(id));
-        consumer.setName(username);
-        consumer.setPassWord(password);
-        consumer.setSex(Sex.valueOf(sex));
-        consumer.setPhoneNum(phoneNum);
-        consumer.setEmail(email);
-        consumer.setBirth(myBirth);
-        consumer.setLocation(location);
-        consumer.setPortrait(portrait);
-        consumer.setUpdateTime(new Date());
-
-        boolean res = consumerService.updateConsumer(consumer);
-        if (res) {
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "修改成功");
-        } else {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "修改失败");
-        }
-        return jsonObject;
-    }
-
-    //    更新用户头像
-    @ResponseBody
-    @RequestMapping(value = "/portrait/update", method = RequestMethod.POST)
-    public Object updateUserPic(@RequestParam("file") MultipartFile pictureFile, @RequestParam("id") long id) {
-        //TODO: wrap into global function to reduce duplicity
-        JSONObject jsonObject = new JSONObject();
-
-        if (pictureFile.isEmpty()) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "文件上传失败！");
-            return jsonObject;
-        }
-        String fileName = System.currentTimeMillis() + pictureFile.getOriginalFilename();
-        String filePath = userPath + "img";
-        File file1 = new File(filePath);
-        if (!file1.exists()) {
-            file1.mkdir();
-        }
-        filePath += System.getProperty("file.separator") + "consumerPic";
-        File file2 = new File(filePath);
-        if (!file2.exists()) {
-            file2.mkdir();
-        }
-
-        File dest = new File(filePath + System.getProperty("file.separator") + fileName);
-        String portraitPath = "/img/consumerPic/" + fileName;
-        try {
-            pictureFile.transferTo(dest);
-            Consumer consumer = new Consumer();
-            consumer.setId(id);
-            consumer.setPortrait(portraitPath);
-            boolean res = consumerService.updateUserPicture(consumer);
-            if (res) {
-                jsonObject.put("code", 0);
-                jsonObject.put("portrait", portraitPath);
-                jsonObject.put("msg", "上传成功");
-            } else {
-                jsonObject.put("code", 1);
-                jsonObject.put("msg", "上传失败");
-            }
-        } catch (IOException | ConsumerException e) {
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", "上传失败" + e.getMessage());
-        }
-        return jsonObject;
-    }
 }
+
+
+

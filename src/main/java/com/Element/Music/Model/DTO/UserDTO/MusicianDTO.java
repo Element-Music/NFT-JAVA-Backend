@@ -1,11 +1,7 @@
 package com.Element.Music.Model.DTO.UserDTO;
 
 import com.Element.Music.Emun.Genre;
-import com.Element.Music.Model.DAO.MusicDAO.Album;
-import com.Element.Music.Model.DAO.MusicDAO.Song;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
-import com.Element.Music.Model.DTO.MusicDTO.AlbumDTO;
-import com.Element.Music.Model.DTO.MusicDTO.SongDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,10 +16,6 @@ public class MusicianDTO {
     private Genre genre;
 
     private String name;
-
-    private Set<SongDTO> songDTOS;
-
-    private Set<AlbumDTO> albumDTOS;
 
     private String weibo;
 
