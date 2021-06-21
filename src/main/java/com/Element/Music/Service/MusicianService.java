@@ -1,7 +1,5 @@
 package com.Element.Music.Service;
 
-import com.Element.Music.Exception.MusicianException;
-import com.Element.Music.Model.DAO.UserDAO.Consumer;
 import com.Element.Music.Model.DAO.UserDAO.Musician;
 
 import java.util.List;

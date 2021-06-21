@@ -1,14 +1,11 @@
 package com.Element.Music.Model.DAO.UserDAO;
 
 import com.Element.Music.Model.DAO.BaseEntity;
-import com.Element.Music.Model.DAO.UserDAO.Musician;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.apache.tomcat.jni.Address;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Data
