@@ -57,7 +57,7 @@ public class ConsumerController {
         Consumer consumer = new Consumer();
         consumer.setAccountId(accountId);
         consumer.setEmail(null);
-        String portraitPath = "/img/consumerPic/1623567820637default_profile.jpg";
+        String portraitPath = "";
         consumer.setPortrait(portraitPath);
         consumer.setNickname("Unnamed");
         consumer.setCreateTime(new Date());
